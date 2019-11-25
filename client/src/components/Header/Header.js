@@ -14,7 +14,7 @@ class Header extends Component {
     render() {
 
         return (
-            <div>
+            <div class='container-fluid'>
                 <div class='row bg-info text-white'>
                     <div class='col-6 text-left p-3 m-l-2'>
                         BLOGGER
