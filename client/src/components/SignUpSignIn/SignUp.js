@@ -9,49 +9,60 @@ class SignUp extends Component {
         username: '',
         email: '',
         password: '',
-        isLoading: false
+        isLoading: true,
+        message: '',
     }
 
     componentDidMount() {
         this.setState({
-            isLoading: true
+            isLoading: false
         })
     }
 
-    onUsernameTextboxChange = (e) => {
+    onInputBoxChange = (e) => {
         this.setState({
-            username: e.target.value
-        })
-    }
-
-    onEmailTextboxChange = (e) => {
-        this.setState({
-            email: e.target.value
-        })
-    }
-
-    onPasswordTextboxChange = (e) => {
-        this.setState({
-            password: e.target.value
-        })
+            [e.target.name]: e.target.value
+        });
     }
 
     onSignUp = () => {
 
         const { username, email, password } = this.state;
-        console.log("trying");
+
+        var shouldFetch = this.preCheck();
+        if (!shouldFetch) return;
         axios.post('http://localhost:8080/api/account/signup'
             , {
                 username: username,
                 email: email,
                 password: password
             }).then(res => {
-                console.log(res);
+                this.setState({
+                    message: res.data.message,
+                })
             });
 
     }
 
+    preCheck = () => {
+        const { username, email, password } = this.state;
+        if (!username) this.setState({ message: "Please fill in the Username" });
+        else if (!email) this.setState({ message: "Please fill in the Email" });
+        else if (!password) this.setState({ message: "Please fill in the Password" });
+
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var validEmail = re.test(String(email).toLowerCase());
+        if (!validEmail) this.setState({ message: 'Email is not valid' });
+
+        if (!username || !email || !password || !validEmail) return false;
+        return true;
+    }
+
     render() {
+
+        if (this.state.isLoading) {
+            return <h3 class='text-center p-3'>Please wait while loading</h3>
+        }
 
         return (
             <div class='text-center text-black p-5'>
@@ -64,19 +75,19 @@ class SignUp extends Component {
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Username</label>
                         <div class="col-sm-10">
-                            <input type="text" onChange={this.onUsernameTextboxChange} class="form-control" placeholder="Username" />
+                            <input type="text" name='username' onChange={this.onInputBoxChange} class="form-control" placeholder="Username" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Email</label>
                         <div class="col-sm-10">
-                            <input type="email" onChange={this.onEmailTextboxChange} class="form-control" placeholder="Email" />
+                            <input type="email" name='email' onChange={this.onInputBoxChange} class="form-control" placeholder="Email" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Password</label>
                         <div class="col-sm-10">
-                            <input type="password" onChange={this.onPasswordTextboxChange} class="form-control" placeholder="Password" />
+                            <input type="password" name='password' onChange={this.onInputBoxChange} class="form-control" placeholder="Password" />
                         </div>
                     </div>
 
@@ -86,6 +97,7 @@ class SignUp extends Component {
                             <Link to='/signin' class='btn btn-primary'>Already have an Account? Sign In here</Link>
                         </div>
                     </div>
+                    <h6 class='text-center text-info'>{this.state.message}</h6>
                 </form>
 
             </div>
