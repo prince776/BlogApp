@@ -1,19 +1,38 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import axios from 'axios'
 import './Home.css'
 
 class Home extends Component {
 
     state = {
-
+        redirectTo: '',
     }
 
     componentDidMount() {
-        this.props.params.setLoading(false);
+        this.props.params.setLoading(true);
+        axios.defaults.withCredentials = true;
+        axios.post('http://localhost:8080/api/account/verify').then(res => {
+            this.props.params.setLoading(false);
+            if (res.data.success) {
+                this.setState({
+                    redirectTo: '/user/dashboard'
+                })
+            }
+        });
     }
 
 
+
     render() {
+
+        if (this.props.params.isLoading)
+            return <div></div>
+
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
+
         return (
             <div className='container-fluid p-5' id='home-div'>
 

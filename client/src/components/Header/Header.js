@@ -12,7 +12,6 @@ class Header extends Component {
     }
 
     render() {
-
         return (
             <div className='container-fluid'>
                 <div className='row bg-info text-white'>
@@ -21,6 +20,7 @@ class Header extends Component {
                     </div>
                     <div className='col-6 text-right p-3 m-l-2'>
                         <h4>EASY BLOGGING</h4>
+                        {/* TODO: REPLACE THIS WITH USER's PROFILE PIC */}
                     </div>
                 </div>
             </div>

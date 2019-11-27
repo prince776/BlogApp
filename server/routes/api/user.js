@@ -96,4 +96,26 @@ module.exports = (app) => {
 
     });
 
+    app.post('/api/account/verify', (req, res) => {
+
+        const userID = req.cookies.userID;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+        UserSession.find({
+            _id: userID,
+            isDeleted: false,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Expired");
+
+            return res.send({
+                success: true,
+                message: "Sesion valid"
+            });
+
+        })
+
+    });
+
 }
