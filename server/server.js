@@ -33,6 +33,7 @@ app.use(cookieParser());
 //routes
 require('./routes/api/user.js')(app);
 require('./routes/api/userProfile.js')(app);
+require('./routes/api/blogPost.js')(app);
 
 app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`)

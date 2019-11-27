@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
 import './Test.css'
 
 class Test extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
 
         }
@@ -29,4 +31,4 @@ class Test extends Component {
 
 }
 
-export default Test;
+export default withRouter(Test);

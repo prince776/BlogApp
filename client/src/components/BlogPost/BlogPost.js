@@ -1,0 +1,116 @@
+import React, { Component } from 'react'
+import { Redirect, withRouter } from 'react-router-dom'
+import './BlogPost.css'
+import axios from 'axios'
+import Navbar from './../Profile/Navbar.js'
+
+class BlogPost extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isSignedIn: false,
+            redirectTo: '',
+            message: '',
+            title: '',
+            content: '',
+            timestamp: '',
+            username: '',
+            blogPostName: '',
+        }
+    }
+
+    componentDidMount() {
+        this.props.params.setLoading(false);
+
+        axios.defaults.withCredentials = true;
+        axios.post('http://localhost:8080/api/account/verify').then(res => {
+            this.props.params.setLoading(false);
+            if (res.data.success) {
+                this.setState({
+                    isSignedIn: true
+                })
+            }
+        });
+
+        axios.post('http://localhost:8080/api/blogPost/getBlogPostData'
+            , {
+                username: this.props.match.params.username,
+                blogPostName: this.props.match.params.blogPostName
+            }).then(res => {
+                this.props.params.setLoading(false);
+
+                if (res.data.success) {
+                    this.setState({
+                        title: res.data.title,
+                        content: res.data.content,
+                        username: res.data.username,
+                        blogPostName: res.data.blogPostName,
+                        timestamp: res.data.timestamp
+                    })
+                } else {
+                    this.setState({
+                        message: res.data.message
+                    })
+                }
+
+            })
+        // console.log(this.props)
+
+    }
+
+    onSignIn = () => {
+        this.setState({
+            redirectTo: '/signin'
+        })
+    }
+
+    render() {
+
+        if (this.props.params.isLoading)
+            return <div></div>
+
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
+
+        var sidebar;
+        var signInButon;
+
+        if (this.state.isSignedIn) {
+            sidebar = <Navbar activeLink='' />
+            signInButon = undefined
+        } else {
+            sidebar = undefined;
+            signInButon = <button className='btn btn-primary float-right' onClick={this.onSignIn}>Sign In</button>
+        }
+
+        return (
+            <div>
+                <div className='row p-3'>
+                    {sidebar}
+                    <div className='col text-center p-5 text-secondary'>
+                        <h3 >Viewing Blog Post</h3><br />
+
+                        <h4 >Author: {this.state.username}</h4>
+                        <h4 >Post Name: {this.state.blogPostName}</h4>
+                        {signInButon}
+                        <h5 >Date Created: {this.state.timestamp}</h5>
+                        <hr />
+                        <h4 >Title: {this.state.title}</h4>
+                        <br />
+                        <h6 className='text-left'  >{this.state.content}</h6>
+                        <h5 className='text-danger'>{this.state.message}</h5>
+                    </div>
+
+                </div>
+
+            </div>
+        )
+
+    }
+
+}
+
+export default withRouter(BlogPost);

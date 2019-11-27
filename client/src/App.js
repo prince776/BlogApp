@@ -6,15 +6,18 @@ import Header from './components/Header/Header.js'
 import Footer from './components/Footer/Footer.js'
 
 class App extends Component {
-
-  state = {
-    isLoading: true
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true
+    }
   }
 
   componentDidMount() {
     // this.setState({
     //   isLoading: false
-    // })
+    // })    
+
   }
 
   setLoading = (loading) => {

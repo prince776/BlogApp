@@ -35,20 +35,31 @@ module.exports = (app) => {
             if (err) return sendError(res, err);
             if (previousUsers.length > 0) return sendError(res, "Email already registered");
 
-            var newUser = User();
-            newUser.username = username;
-            newUser.email = email;
-            newUser.password = newUser.generateHash(password);
+            User.find({
+                username: username,
+                isDeleted: false
+            }, (err, previousUsers1) => {
+                if (err) return sendError(res, err);
+                if (previousUsers1.length > 0) return sendError(res, "Username already registered");
 
-            newUser.save((err, docs) => {
-                if (err) return sendError(res, "Server Error", err);
-                else {
-                    return res.send({
-                        success: true,
-                        message: 'Signed up succesfully'
-                    })
-                }
+                var newUser = User();
+                newUser.username = username;
+                newUser.email = email;
+                newUser.password = newUser.generateHash(password);
+
+                newUser.save((err, docs) => {
+                    if (err) return sendError(res, "Server Error", err);
+                    else {
+                        return res.send({
+                            success: true,
+                            message: 'Signed up succesfully'
+                        })
+                    }
+                })
+
             })
+
+
         })
     });
 

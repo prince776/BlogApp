@@ -26,7 +26,7 @@ class Dashboard extends Component {
                         <h3 className='text-secondary'>Welcome to Blogger</h3><br />
                         <button className='btn btn-info'>Create Blog</button>
                         <hr />
-                        <h4 className='text-secondary'>Your Blogs:</h4>
+                        <h4 className='text-secondary'>Your Blog Posts:</h4>
                         {/* TODO:SHOW previous blogs */}
                     </div>
                 </div>

@@ -11,6 +11,7 @@ class Home extends Component {
 
     componentDidMount() {
         this.props.params.setLoading(true);
+        console.log(this.props);
         axios.defaults.withCredentials = true;
         axios.post('http://localhost:8080/api/account/verify').then(res => {
             this.props.params.setLoading(false);
