@@ -17,6 +17,16 @@ class SignIn extends Component {
 
     componentDidMount() {
         this.props.params.setLoading(false);
+
+        axios.defaults.withCredentials = true;
+        axios.post('http://localhost:8080/api/account/verify').then(res => {
+            this.props.params.setLoading(false);
+            if (res.data.success) {
+                this.setState({
+                    redirectTo: '/user/dashboard'
+                })
+            }
+        });
     }
 
     onInputBoxChanged = (e) => {
@@ -43,7 +53,6 @@ class SignIn extends Component {
                     message: res.data.message
                 })
                 if (res.data.success) {
-                    console.log("SUCCESSFULL")
                     this.setState({
                         redirectTo: '/user/dashboard'
                     })
