@@ -17,10 +17,10 @@ class Header extends Component {
             <div className='container-fluid'>
                 <div className='row bg-info text-white'>
                     <div className='col-6 text-left p-3 m-l-2'>
-                        BLOGGER
+                        <h4>BLOGGER</h4>
                     </div>
                     <div className='col-6 text-right p-3 m-l-2'>
-                        EASY BLOGGING
+                        <h4>EASY BLOGGING</h4>
                     </div>
                 </div>
             </div>

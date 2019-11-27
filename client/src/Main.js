@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom'
 import Home from './components/Home/Home.js'
 import SignIn from './components/SignUpSignIn/SignIn.js'
 import SignUp from './components/SignUpSignIn/SignUp.js'
+import Dashboard from './components/Profile/Dashboard/Dashboard.js'
 
 class Main extends Component {
 
@@ -19,6 +20,7 @@ class Main extends Component {
                 <Route exact path="/" render={() => <Home params={this.props} />} />
                 <Route exact path="/signup" render={() => <SignUp params={this.props} />} />
                 <Route exact path="/signin" render={() => <SignIn params={this.props} />} />
+                <Route exact path="/user/dashboard" render={() => <Dashboard params={this.props} />} />
             </Switch>
         );
 

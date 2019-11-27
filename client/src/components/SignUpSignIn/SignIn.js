@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import './SignIn.css'
 
 class SignIn extends Component {
@@ -10,6 +10,7 @@ class SignIn extends Component {
             email: '',
             password: '',
             message: '',
+            redirectTo: '',
         }
         this.props.params.setLoading(true);
     }
@@ -41,6 +42,12 @@ class SignIn extends Component {
                 this.setState({
                     message: res.data.message
                 })
+                if (res.data.success) {
+                    console.log("SUCCESSFULL")
+                    this.setState({
+                        redirectTo: '/user/dashboard'
+                    })
+                }
             })
     }
 
@@ -59,8 +66,13 @@ class SignIn extends Component {
 
 
     render() {
+
         if (this.props.params.isLoading)
             return (<div></div>);
+
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
 
         return (
             <div className='p-5'>
