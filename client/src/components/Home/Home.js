@@ -15,16 +15,16 @@ class Home extends Component {
 
     render() {
         return (
-            <div class='container-fluid p-5' id='home-div'>
+            <div className='container-fluid p-5' id='home-div'>
 
-                <div class='row text-black'>
-                    <div class='col text-center p-3 m-t-2'>
+                <div className='row text-black'>
+                    <div className='col text-center p-3 m-t-2'>
                         <h1>Free to use Blogger</h1>
                     </div>
                 </div>
-                <div class='row'>
-                    <div class='col text-center '>
-                        <Link to='/signin'><button class='btn btn-primary text-center p-3'>SIGN IN TO CREATE A BLOG</button></Link>
+                <div className='row'>
+                    <div className='col text-center '>
+                        <Link to='/signin'><button className='btn btn-primary text-center p-3'>SIGN IN TO CREATE A BLOG</button></Link>
                     </div>
                 </div>
 

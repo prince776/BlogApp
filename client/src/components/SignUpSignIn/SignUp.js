@@ -4,19 +4,20 @@ import { Link } from "react-router-dom";
 import './SignUp.css'
 
 class SignUp extends Component {
-
-    state = {
-        username: '',
-        email: '',
-        password: '',
-        isLoading: true,
-        message: '',
+    constructor(props) {
+        super(props);
+        this.state = {
+            username: '',
+            email: '',
+            password: '',
+            message: '',
+        }
+        this.props.params.setLoading(true);
     }
 
+
     componentDidMount() {
-        this.setState({
-            isLoading: false
-        })
+        this.props.params.setLoading(false);
     }
 
     onInputBoxChange = (e) => {
@@ -29,14 +30,19 @@ class SignUp extends Component {
 
         const { username, email, password } = this.state;
 
+
         var shouldFetch = this.preCheck();
         if (!shouldFetch) return;
+
+        this.props.params.setLoading(true);
+
         axios.post('http://localhost:8080/api/account/signup'
             , {
                 username: username,
                 email: email,
                 password: password
             }).then(res => {
+                this.props.params.setLoading(false);
                 this.setState({
                     message: res.data.message,
                 })
@@ -60,49 +66,49 @@ class SignUp extends Component {
 
     render() {
 
-        if (this.state.isLoading) {
-            return <h3 class='text-center p-3'>Please wait while loading</h3>
-        }
+        if (this.props.params.isLoading)
+            return (<div></div>)
 
         return (
-            <div class='text-center text-black p-5'>
+            <div className='text-center text-black p-5'>
 
                 <div >
                     <h1>Sign Up</h1>
                 </div>
 
-                <form class='p-4 m-5'>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Username</label>
-                        <div class="col-sm-10">
-                            <input type="text" name='username' onChange={this.onInputBoxChange} class="form-control" placeholder="Username" />
+                <form className='p-4 m-5'>
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Username</label>
+                        <div className="col-sm-10">
+                            <input type="text" name='username' onChange={this.onInputBoxChange} className="form-control" placeholder="Username" />
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Email</label>
-                        <div class="col-sm-10">
-                            <input type="email" name='email' onChange={this.onInputBoxChange} class="form-control" placeholder="Email" />
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Email</label>
+                        <div className="col-sm-10">
+                            <input type="email" name='email' onChange={this.onInputBoxChange} className="form-control" placeholder="Email" />
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Password</label>
-                        <div class="col-sm-10">
-                            <input type="password" name='password' onChange={this.onInputBoxChange} class="form-control" placeholder="Password" />
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Password</label>
+                        <div className="col-sm-10">
+                            <input type="password" name='password' onChange={this.onInputBoxChange} className="form-control" placeholder="Password" />
                         </div>
                     </div>
 
-                    <button type="button" onClick={this.onSignUp} class="btn btn-warning">Sign Up</button>
-                    <div class='row p-2'>
-                        <div class='col'>
-                            <Link to='/signin' class='btn btn-primary'>Already have an Account? Sign In here</Link>
+                    <button type="button" onClick={this.onSignUp} className="btn btn-warning">Sign Up</button>
+                    <div className='row p-2'>
+                        <div className='col'>
+                            <Link to='/signin' className='btn btn-primary'>Already have an Account? Sign In here</Link>
                         </div>
                     </div>
-                    <h6 class='text-center text-info'>{this.state.message}</h6>
+                    <h6 className='text-center text-info'>{this.state.message}</h6>
                 </form>
 
             </div>
 
         )
+
 
     }
 
