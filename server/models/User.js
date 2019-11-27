@@ -1,10 +1,11 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
 
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        default: ""
+        default: '',
     },
     email: {
         type: String,
@@ -14,6 +15,10 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    isDeleted: {
+        type: Boolean,
+        default: false
+    },
     signUpDate: {
         type: Date,
         default: Date.now()
@@ -21,15 +26,15 @@ const UserSchema = new mongoose.Schema({
     isVerified: {
         type: Boolean,
         default: false
-    }
-})
+    },
+});
 
 //methods
-UserSchema.methods.generateHash = (password) => {
+UserSchema.methods.generateHash = function (password) {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 }
 
-UserSchema.methods.isPasswordValid = (password) => {
+UserSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 }
 
