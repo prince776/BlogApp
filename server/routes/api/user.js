@@ -1,4 +1,5 @@
 var User = require('../../models/User.js')
+var UserSession = require('../../models/UserSession.js');
 
 var sendError = (res, errFront, errBack) => {
     if (!errBack) errBack = errFront;
@@ -22,14 +23,14 @@ module.exports = (app) => {
         username = username.trim();
         email = email.trim();
         email = email.toLowerCase();
-        password = password.trim();
 
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         var validEmail = re.test(String(email).toLowerCase());
         if (!validEmail) return sendError(res, 'Invalid Email')
 
         User.find({
-            email: email
+            email: email,
+            isDeleted: false
         }, (err, previousUsers) => {
             if (err) return sendError(res, err);
             if (previousUsers.length > 0) return sendError(res, "Email already registered");
@@ -55,34 +56,42 @@ module.exports = (app) => {
         var { body } = req;
         var { email, password } = body;
 
-        console.log(body);
-
         if (!email) return sendError(res, "Empty Email");
         else if (!password) return sendError(res, "Empty Email");
 
         email = email.trim();
         email = email.toLowerCase();
-        password = password.trim();
 
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         var validEmail = re.test(String(email).toLowerCase());
         if (!validEmail) return sendError(res, 'Invalid Email')
 
+
         User.find({
-            email: email
+            email: email,
+            isDeleted: false
         }, (err, previousUsers) => {
             if (err) return sendError(res, "Server Error", err);
             if (previousUsers.length < 1) return sendError(res, "User doesn't exists");
 
             const user = previousUsers[0];
-            console.log(user);
             if (!user.validPassword(password)) return sendError(res, "Password Incorrect");
 
-            return res.send({
-                success: true,
-                message: 'Succesful Signin'
-            });
+            //create login session
+            var userSession = UserSession();
+            userSession.userID = user._id;
+            userSession.ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
+            userSession.save((err, docs) => {
+                if (err) return sendError(res, "Server error", err);
+                //send Cookies
+                res.cookie('userID', docs._id);
+                //send success message
+                return res.send({
+                    success: true,
+                    message: 'Signed in succesfully'
+                })
+            })
         })
 
     });

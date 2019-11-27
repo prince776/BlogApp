@@ -31,11 +31,11 @@ class SignIn extends Component {
         var shouldFetch = this.preCheck();
         if (!shouldFetch) return;
         this.props.params.setLoading(true);
-
+        axios.defaults.withCredentials = true;
         axios.post('http://localhost:8080/api/account/signin'
             , {
                 email: email,
-                password: password
+                password: password,
             }).then(res => {
                 this.props.params.setLoading(false);
                 this.setState({

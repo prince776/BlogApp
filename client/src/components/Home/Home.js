@@ -9,7 +9,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-
+        this.props.params.setLoading(false);
     }
 
 
