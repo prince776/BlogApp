@@ -65,7 +65,7 @@ module.exports = (app) => {
                         if (err) return sendError(res, "Error saving post to DB", err);
                         return res.send({
                             success: true,
-                            message: 'Post created. Find it at: ' + '${HOST}/blogPosts' + '/' + user.username
+                            message: 'Post created. Find it at: ' + 'http://localhost:3000/blogPosts' + '/' + user.username
                                 + '/' + docs.name,
                         })
                     })

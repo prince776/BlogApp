@@ -93,10 +93,10 @@ class BlogPost extends Component {
                     <div className='col text-center p-5 text-secondary'>
                         <h3 >Viewing Blog Post</h3><br />
 
-                        <h4 >Author: {this.state.username}</h4>
-                        <h4 >Post Name: {this.state.blogPostName}</h4>
+                        <h6 ><i>Author: {this.state.username}</i></h6>
+                        <h6 ><i>Post Name: {this.state.blogPostName}</i></h6>
                         {signInButon}
-                        <h5 >Date Created: {this.state.timestamp}</h5>
+                        <h6 ><i>Date Created: {this.state.timestamp}</i></h6>
                         <hr />
                         <h4 >Title: {this.state.title}</h4>
                         <br />
