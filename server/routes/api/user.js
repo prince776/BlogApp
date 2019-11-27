@@ -85,7 +85,7 @@ module.exports = (app) => {
             userSession.save((err, docs) => {
                 if (err) return sendError(res, "Server error", err);
                 //send Cookies
-                res.cookie('userID', docs._id);
+                res.cookie('sessionToken', docs._id);
                 //send success message
                 return res.send({
                     success: true,
@@ -98,11 +98,11 @@ module.exports = (app) => {
 
     app.post('/api/account/verify', (req, res) => {
 
-        const userID = req.cookies.userID;
+        const sessionToken = req.cookies.sessionToken;
         const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
 
         UserSession.find({
-            _id: userID,
+            _id: sessionToken,
             isDeleted: false,
             ipAddress: ipAddress
         }, (err, previousSessions) => {
@@ -120,11 +120,11 @@ module.exports = (app) => {
 
     app.post('/api/account/signout', (req, res) => {
 
-        const userID = req.cookies.userID;
+        const sessionToken = req.cookies.sessionToken;
         const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
 
         UserSession.find({
-            _id: userID,
+            _id: sessionToken,
             isDeleted: false,
             ipAddress: ipAddress
         }, (err, previousSessions) => {
@@ -136,7 +136,7 @@ module.exports = (app) => {
 
             userSession.save((err, docs) => {
                 if (err) return sendError(res, "Server Error", err);
-                res.clearCookie('userID');
+                res.clearCookie('sessionToken');
                 return res.send({
                     success: true,
                     message: "Sesion Logged Out"
@@ -144,6 +144,40 @@ module.exports = (app) => {
             })
         })
 
+    });
+
+    app.post('/api/account/profile', (req, res) => {
+        const sessionToken = req.cookies.sessionToken;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+        UserSession.find({
+            _id: sessionToken,
+            isDeleted: false,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Expired");
+
+            //now find assocciated user
+            var session = previousSessions[0];
+
+            User.find({
+                isDeleted: false,
+                _id: session.userID
+            }, (err, previousUsers) => {
+
+                if (err) return sendError(res, "Server Error", err);
+                if (previousUsers.length < 1) return sendError(res, "User doesn't exists");
+
+                return res.send({
+                    success: true,
+                    username: previousUsers[0].username,
+                    email: previousUsers[0].email
+                });
+
+            })
+
+        })
     });
 
 }

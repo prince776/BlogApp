@@ -42,22 +42,22 @@ class Navbar extends Component {
                     <ul className="navbar-nav">
                         <li className="nav-item">
                             <Link className="nav-link" to='/user/dashboard'>
-                                {this.props.activeLink == 'dashboard' ? <h5 className='text-info'>Welcome</h5> : <h5>Welcome</h5>}
+                                {this.props.activeLink === 'dashboard' ? <h5 className='text-info'>Welcome</h5> : <h5>Welcome</h5>}
                             </Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to='/user/profile'>
-                                {this.props.activeLink == 'profile' ? <h5 className='text-info'>Profile</h5> : <h5>Profile</h5>}
+                                {this.props.activeLink === 'profile' ? <h5 className='text-info'>Profile</h5> : <h5>Profile</h5>}
                             </Link>
                         </li>
                         <hr />
                         <li className="nav-item">
                             <Link className="nav-link" to='/user/newBlog'>
-                                {this.props.activeLink == 'newBlog' ? <h5 className='text-info'>Create Blog</h5> : <h5>Create Blog</h5>}
+                                {this.props.activeLink === 'newBlog' ? <h5 className='text-info'>Create Blog</h5> : <h5>Create Blog</h5>}
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <button onClick={this.onSignOut} className="nav-link btn btn-light p-2" >
+                            <button onClick={this.onSignOut} className="nav-link btn btn-light" >
                                 <h5>Sign Out</h5>
                             </button>
                         </li>

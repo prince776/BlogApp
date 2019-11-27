@@ -16,11 +16,12 @@ class Test extends Component {
 
     render() {
 
+        if (this.props.params.isLoading)
+            return <div></div>
+
         return (
             <div>
-
-
-
+                Test
             </div>
         )
 
