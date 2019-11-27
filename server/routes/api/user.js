@@ -146,38 +146,5 @@ module.exports = (app) => {
 
     });
 
-    app.post('/api/account/profile', (req, res) => {
-        const sessionToken = req.cookies.sessionToken;
-        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
-
-        UserSession.find({
-            _id: sessionToken,
-            isDeleted: false,
-            ipAddress: ipAddress
-        }, (err, previousSessions) => {
-            if (err) return sendError(res, "Server Error", err);
-            if (previousSessions.length < 1) return sendError(res, "Session Expired");
-
-            //now find assocciated user
-            var session = previousSessions[0];
-
-            User.find({
-                isDeleted: false,
-                _id: session.userID
-            }, (err, previousUsers) => {
-
-                if (err) return sendError(res, "Server Error", err);
-                if (previousUsers.length < 1) return sendError(res, "User doesn't exists");
-
-                return res.send({
-                    success: true,
-                    username: previousUsers[0].username,
-                    email: previousUsers[0].email
-                });
-
-            })
-
-        })
-    });
 
 }
