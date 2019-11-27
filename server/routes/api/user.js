@@ -118,4 +118,32 @@ module.exports = (app) => {
 
     });
 
+    app.post('/api/account/signout', (req, res) => {
+
+        const userID = req.cookies.userID;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+        UserSession.find({
+            _id: userID,
+            isDeleted: false,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Already Expired");
+
+            var userSession = previousSessions[0];
+            userSession.isDeleted = true;
+
+            userSession.save((err, docs) => {
+                if (err) return sendError(res, "Server Error", err);
+                res.clearCookie('userID');
+                return res.send({
+                    success: true,
+                    message: "Sesion Logged Out"
+                });
+            })
+        })
+
+    });
+
 }
