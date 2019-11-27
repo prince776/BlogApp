@@ -121,4 +121,62 @@ module.exports = (app) => {
 
     });
 
+    app.post('/api/blogPost/getMyPosts', (req, res) => {
+
+        const sessionToken = req.cookies.sessionToken;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+        UserSession.find({
+            _id: sessionToken,
+            isDeleted: false,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Expired");
+
+            User.find({
+                isDeleted: false,
+                _id: previousSessions[0].userID
+            }, (err, previousUsers) => {
+
+                if (err) return sendError(res, "Server Error", err);
+                if (previousUsers.length < 1) return sendError(res, "User Not Found!");
+
+                var user = previousUsers[0];
+                var blogPostNames = [];
+                var blogPostTitles = [];
+
+                BlogPost.find({
+                    isDeleted: false,
+                    author: user._id
+                }, (err, previousPosts) => {
+
+                    if (err) return sendError(res, "Server Error", err);
+
+                    if (previousPosts.length < 1) {
+                        return res.send({
+                            success: true,
+                            message: 'No Posts Yet',
+                            username: user.username
+                        })
+                    }
+
+                    previousPosts.forEach((post) => {
+                        blogPostNames.push(post.name);
+                        blogPostTitles.push(post.title);
+                    });
+
+                    return res.send({
+                        blogPostNames: blogPostNames,
+                        blogPostTitles: blogPostTitles,
+                        username: user.username
+                    })
+
+                })
+
+            })
+
+        })
+    });
+
 }
