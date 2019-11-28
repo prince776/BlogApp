@@ -44,9 +44,7 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, "public", "service-worker.js"));
     });
     app.get('*', (req, res) => {
-        if (!req.secure) {
-            res.redirect("https://" + req.headers.host + req.url);
-        }
+
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     })
 }
