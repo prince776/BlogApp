@@ -1,8 +1,6 @@
 var CACHE_NAME = 'pwa-blog-app';
 var urlsToCache = [
     '/',
-    '/user/dashboard',
-    '/user/profile',
 ];
 
 // Install a service worker
