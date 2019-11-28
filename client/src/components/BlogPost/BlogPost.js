@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Redirect, withRouter } from 'react-router-dom'
 import './BlogPost.css'
 import Navbar from './../Profile/Navbar.js'
+import { unbindTextureUnit } from '@tensorflow/tfjs-core/dist/backends/webgl/webgl_util';
 
 class BlogPost extends Component {
 
@@ -64,6 +65,12 @@ class BlogPost extends Component {
         })
     }
 
+    onEdit = () => {
+        this.setState({
+            redirectTo: `/blogPosts/${this.state.username}/${this.state.blogPostName}/edit`
+        })
+    }
+
     render() {
 
         if (this.props.params.isLoading)
@@ -75,13 +82,17 @@ class BlogPost extends Component {
 
         var sidebar;
         var signInButon;
+        var editButton;
 
         if (this.state.isSignedIn) {
             sidebar = <Navbar activeLink='' axiosInstance={this.props.params.axiosInstance} />
             signInButon = undefined
+            editButton = <button onClick={this.onEdit} className='btn btn-info float-right'>Edit</button>
+
         } else {
             sidebar = undefined;
             signInButon = <button className='btn btn-primary float-right' onClick={this.onSignIn}>Sign In</button>
+            editButton = undefined;
         }
 
         return (
@@ -94,6 +105,8 @@ class BlogPost extends Component {
                         <h6 ><i>Author: {this.state.username}</i></h6>
                         <h6 ><i>Post Name: {this.state.blogPostName}</i></h6>
                         {signInButon}
+                        {editButton}
+                        {signInButon || editButton ? <br /> : <div></div>}
                         <h6 ><i>Date Created: {this.state.timestamp}</i></h6>
                         <hr />
                         <h4 >Title: {this.state.title}</h4>

@@ -9,6 +9,7 @@ import Dashboard from './components/Profile/Dashboard/Dashboard.js'
 import Profile from './components/Profile/Profile.js'
 import CreateBlog from './components/Profile/CreateBlog/CreateBlog.js'
 import BlogPost from './components/BlogPost/BlogPost.js'
+import EditPost from './components/BlogPost/EditPost.js'
 
 class Main extends Component {
 
@@ -30,7 +31,7 @@ class Main extends Component {
                 <Route exact path="/user/profile" render={() => <Profile params={this.props} />} />
                 <Route exact path="/user/createBlog" render={() => <CreateBlog params={this.props} />} />
                 <Route exact path="/blogPosts/:username/:blogPostName" render={() => <BlogPost params={this.props} />} />
-
+                <Route exact path="/blogPosts/:username/:blogPostName/edit" render={() => <EditPost params={this.props} />} />
             </Switch>
         );
 

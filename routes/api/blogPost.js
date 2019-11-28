@@ -231,4 +231,74 @@ module.exports = (app) => {
         })
     });
 
+    app.post('/api/blogPost/update', (req, res) => {
+
+        const sessionToken = req.cookies.sessionToken;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+        var { name, title, content } = req.body;
+
+        if (!name) return sendError(res, "Empty Name");
+        if (!title) return sendError(res, "Empty Title");
+        if (!content) return sendError(res, "Emptu Content");
+
+        name = name.trim();
+        title = title.trim();
+        content = content.trim();
+
+        UserSession.find({
+            _id: sessionToken,
+            isDeleted: false,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Expired");
+
+            User.find({
+                isDeleted: false,
+                _id: previousSessions[0].userID
+            }, (err, previousUsers) => {
+
+                if (err) return sendError(res, "Server Error", err);
+                if (previousUsers.length < 1) return sendError(res, "User Not Found!");
+
+                var user = previousUsers[0];
+
+
+                BlogPost.find({
+                    isDeleted: false,
+                    author: user._id,
+                    name: name
+                }, (err, previousPosts) => {
+
+                    if (err) return sendError(res, "Server Error", err);
+
+                    if (previousPosts.length < 1) {
+                        return res.send({
+                            success: false,
+                            message: 'No Post Found',
+                            username: user.username
+                        })
+                    }
+
+                    var post = previousPosts[0];
+                    post.title = title;
+                    post.content = content;
+                    //TODO:Make timestamp a list and add it to it
+
+                    post.save((err, docs) => {
+                        if (err) return sendError(res, "Server Error", err);
+                        return res.send({
+                            success: true,
+                            message: 'Post Updated Successfully'
+                        })
+                    })
+
+                })
+
+            })
+
+        })
+    });
+
 }

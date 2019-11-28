@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import './Dashboard.css'
 import Navbar from '../Navbar';
 
@@ -14,7 +14,8 @@ class Dashboard extends Component {
             blogPostNames: [],
             message: '',
             username: '',
-            deleting: false
+            deleting: false,
+            redirectTo: '',
         }
     }
 
@@ -70,14 +71,20 @@ class Dashboard extends Component {
 
     }
 
-    onEdit = () => {
-
+    onEdit = (username, name) => {
+        this.setState({
+            redirectTo: `/blogPosts/${username}/${name}/edit`
+        })
     }
 
 
     render() {
 
         const { blogPostNames, blogPostTitles, username } = this.state;
+
+        if (this.state.redirectTo) {
+            return <Redirect to={this.state.redirectTo} />
+        }
 
         return (
             <div>
@@ -119,7 +126,7 @@ class Dashboard extends Component {
                                         </td>
                                         <td>
                                             <button onClick={this.onDelete.bind(this, name)} className='btn btn-danger m-2'>Delete</button>
-                                            <button onClick={this.onEdit} className='btn btn-info'>Edit</button>
+                                            <button onClick={this.onEdit.bind(this, username, name)} className='btn btn-info'>Edit</button>
                                         </td>
 
                                     </tr>
