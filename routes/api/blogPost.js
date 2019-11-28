@@ -65,7 +65,7 @@ module.exports = (app) => {
                         if (err) return sendError(res, "Error saving post to DB", err);
                         return res.send({
                             success: true,
-                            message: 'Post created. Find it at: ' + 'https://fierce-retreat-71149.herokuapp.com' + '/' + user.username
+                            message: 'Post created. Find it at: ' + 'https://fierce-retreat-71149.herokuapp.com/blogPosts' + '/' + user.username
                                 + '/' + docs.name,
                         })
                     })
