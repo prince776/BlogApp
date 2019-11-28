@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './Profile.css'
-import axios from 'axios'
 import Navbar from './Navbar.js'
 
 class Profile extends Component {
@@ -21,9 +20,9 @@ class Profile extends Component {
 
     componentDidMount() {
 
-        axios.defaults.withCredentials = true;
+        this.props.params.axiosInstance.defaults.withCredentials = true;
 
-        axios.post('http://localhost:8080/api/account/profile').then(res => {
+        this.props.params.axiosInstance.post('/api/account/profile').then(res => {
             this.props.params.setLoading(false);
             this.setState({
                 username: res.data.username,
@@ -38,7 +37,7 @@ class Profile extends Component {
     }
 
     onSendVerificationCode = () => {
-        axios.post('http://localhost:8080/api/account/profile/sendVerificationCode'
+        this.props.params.axiosInstance.post('/api/account/profile/sendVerificationCode'
             , {
                 email: this.state.email
             }).then(res => {
@@ -58,7 +57,7 @@ class Profile extends Component {
     }
 
     onVerifyCode = () => {
-        axios.post('http://localhost:8080/api/account/profile/verifyCode'
+        this.props.params.axiosInstance.post('/api/account/profile/verifyCode'
             , {
                 verificationCode: this.state.verificationCodeEntered,
                 email: this.state.email
@@ -93,7 +92,7 @@ class Profile extends Component {
             <div>
                 <div className='row p-3'>
 
-                    <Navbar activeLink='profile' />
+                    <Navbar activeLink='profile' axiosInstance={this.props.params.axiosInstance} />
 
                     <div className='col text-center p-5 text-secondary' >
                         <h3 >Your Profile</h3><hr />

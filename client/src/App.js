@@ -4,19 +4,26 @@ import Main from './Main.js'
 // import SignUp from './components/SignUpSignIn/SignUp.js'
 import Header from './components/Header/Header.js'
 import Footer from './components/Footer/Footer.js'
+import axios from 'axios'
 
 class App extends Component {
   constructor(props) {
     super(props);
+    const env = process.env.NODE_ENV; // current environment
+
     this.state = {
-      isLoading: true
+      isLoading: true,
+      axiosInstance: axios.create({
+        baseURL:
+          env === 'production'
+            ? 'http://example.com' // production
+            : 'http://localhost:8080', // development
+      })
     }
+
   }
 
   componentDidMount() {
-    // this.setState({
-    //   isLoading: false
-    // })    
 
   }
 
@@ -31,7 +38,7 @@ class App extends Component {
       <div>
         <Header />
         {this.state.isLoading === true ? <Loading /> : <div></div>}
-        <Main setLoading={this.setLoading} isLoading={this.state.isLoading} />
+        <Main setLoading={this.setLoading} isLoading={this.state.isLoading} axiosInstance={this.state.axiosInstance} />
         <Footer />
       </div>
     );

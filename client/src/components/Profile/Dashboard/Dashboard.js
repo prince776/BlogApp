@@ -21,8 +21,8 @@ class Dashboard extends Component {
     componentDidMount() {
         this.props.params.setLoading(false);
 
-        axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/api/blogPost/getMyPosts').then(res => {
+        this.props.params.axiosInstance.defaults.withCredentials = true;
+        this.props.params.axiosInstance.post('/api/blogPost/getMyPosts').then(res => {
 
             if (!res.data.success) {
                 this.setState({
@@ -47,7 +47,7 @@ class Dashboard extends Component {
         return (
             <div>
                 <div className='row p-3'>
-                    <Navbar activeLink='dashboard' />
+                    <Navbar activeLink='dashboard' axiosInstance={this.props.params.axiosInstance} />
                     <div className='col text-center p-5'>
 
                         <h3 className='text-secondary'>Welcome to Blogger</h3><br />

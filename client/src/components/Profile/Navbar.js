@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import axios from 'axios'
 import './Navbar.css'
 
 class Navbar extends Component {
@@ -18,8 +17,8 @@ class Navbar extends Component {
 
     onSignOut = () => {
 
-        axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/api/account/signout').then(res => {
+        this.props.axiosInstance.defaults.withCredentials = true;
+        this.props.axiosInstance.post('http://localhost:8080/api/account/signout').then(res => {
             //if failed to sign in session was broken anyways so redirect
             //if successfully signed in redirect
             //if session will actually be correct but failed it will be automaticallt redirected back here 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import axios from 'axios'
 import './Home.css'
 
 class Home extends Component {
@@ -12,8 +11,8 @@ class Home extends Component {
     componentDidMount() {
         this.props.params.setLoading(true);
         console.log(this.props);
-        axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/api/account/verify').then(res => {
+        this.props.params.axiosInstance.defaults.withCredentials = true;
+        this.props.params.axiosInstance.post('/api/account/verify').then(res => {
             this.props.params.setLoading(false);
             if (res.data.success) {
                 this.setState({

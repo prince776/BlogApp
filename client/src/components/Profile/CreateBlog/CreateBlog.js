@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import './CreateBlog.css'
 import Navbar from './../Navbar.js'
-import axios from 'axios';
 import * as toxicity from '@tensorflow-models/toxicity';
 
 class CreateBlog extends Component {
@@ -97,9 +96,9 @@ class CreateBlog extends Component {
             shouldFetch = fetch;
             if (!shouldFetch) return;
             console.log("gonna fetch");
-            axios.defaults.withCredentials = true;
+            this.props.params.axiosInstance.defaults.withCredentials = true;
 
-            axios.post('http://localhost:8080/api/blogPost/create'
+            this.props.params.axiosInstance.post('/api/blogPost/create'
                 , {
                     name: name,
                     title: title,
@@ -125,7 +124,7 @@ class CreateBlog extends Component {
             <div>
                 <div className='row p-3'>
 
-                    <Navbar activeLink='createBlog' />
+                    <Navbar activeLink='createBlog' axiosInstance={this.props.params.axiosInstance} />
 
                     <div className='col text-center p-5 text-secondary' >
                         <h3>Create Your Blog Post</h3>

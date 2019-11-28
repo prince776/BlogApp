@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect, withRouter } from 'react-router-dom'
 import './BlogPost.css'
-import axios from 'axios'
 import Navbar from './../Profile/Navbar.js'
 
 class BlogPost extends Component {
@@ -24,8 +23,8 @@ class BlogPost extends Component {
     componentDidMount() {
         this.props.params.setLoading(false);
 
-        axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/api/account/verify').then(res => {
+        this.props.params.axiosInstance.defaults.withCredentials = true;
+        this.props.params.axiosInstance.post('/api/account/verify').then(res => {
             this.props.params.setLoading(false);
             if (res.data.success) {
                 this.setState({
@@ -34,7 +33,7 @@ class BlogPost extends Component {
             }
         });
 
-        axios.post('http://localhost:8080/api/blogPost/getBlogPostData'
+        this.props.params.axiosInstance.post('/api/blogPost/getBlogPostData'
             , {
                 username: this.props.match.params.username,
                 blogPostName: this.props.match.params.blogPostName
@@ -56,7 +55,6 @@ class BlogPost extends Component {
                 }
 
             })
-        // console.log(this.props)
 
     }
 

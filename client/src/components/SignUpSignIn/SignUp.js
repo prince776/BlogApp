@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 import { Link } from "react-router-dom";
 import './SignUp.css'
 
@@ -36,7 +35,7 @@ class SignUp extends Component {
 
         this.props.params.setLoading(true);
 
-        axios.post('http://localhost:8080/api/account/signup'
+        this.props.params.axiosInstance.post('/api/account/signup'
             , {
                 username: username,
                 email: email,

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom'
 import './SignIn.css'
 
@@ -18,8 +17,8 @@ class SignIn extends Component {
     componentDidMount() {
         this.props.params.setLoading(false);
 
-        axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/api/account/verify').then(res => {
+        this.props.params.axiosInstance.defaults.withCredentials = true;
+        this.props.params.axiosInstance.post('/api/account/verify').then(res => {
             this.props.params.setLoading(false);
             if (res.data.success) {
                 this.setState({
@@ -42,8 +41,8 @@ class SignIn extends Component {
         var shouldFetch = this.preCheck();
         if (!shouldFetch) return;
         this.props.params.setLoading(true);
-        axios.defaults.withCredentials = true;
-        axios.post('http://localhost:8080/api/account/signin'
+        this.props.params.axiosInstance.defaults.withCredentials = true;
+        this.props.params.axiosInstance.post('/api/account/signin'
             , {
                 email: email,
                 password: password,
@@ -61,7 +60,7 @@ class SignIn extends Component {
     }
 
     preCheck = () => {
-        const { username, email, password } = this.state;
+        const { email, password } = this.state;
         if (!email) this.setState({ message: "Please fill in the Email" });
         else if (!password) this.setState({ message: "Please fill in the Password" });
 
