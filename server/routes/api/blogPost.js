@@ -155,7 +155,7 @@ module.exports = (app) => {
 
                     if (previousPosts.length < 1) {
                         return res.send({
-                            success: true,
+                            success: false,
                             message: 'No Posts Yet',
                             username: user.username
                         })

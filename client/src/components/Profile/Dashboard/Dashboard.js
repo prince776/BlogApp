@@ -24,8 +24,11 @@ class Dashboard extends Component {
         axios.defaults.withCredentials = true;
         axios.post('http://localhost:8080/api/blogPost/getMyPosts').then(res => {
 
-            if (!res.data.success) this.setState({ message: res.data.message });
-
+            if (!res.data.success) {
+                this.setState({
+                    message: res.data.message
+                });
+            }
             this.setState({
                 blogPostNames: res.data.blogPostNames,
                 blogPostTitles: res.data.blogPostTitles,
@@ -63,7 +66,7 @@ class Dashboard extends Component {
 
                             <tbody>
 
-                                {blogPostNames.map(name => (
+                                {blogPostNames ? blogPostNames.map(name => (
                                     <tr key={name} >
                                         <td>
                                             <Link to={`/blogPosts/${username}/${name}`}>
@@ -76,11 +79,11 @@ class Dashboard extends Component {
                                             </Link>
                                         </td>
                                     </tr>
-                                ))}
+                                )) : <tr><td></td></tr>}
 
                             </tbody>
                         </table>
-
+                        <h6 className='text-center text-info p-2'>{this.state.message}</h6>
                     </div>
                 </div>
 

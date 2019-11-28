@@ -10,16 +10,47 @@ class CreateBlog extends Component {
         super(props);
 
         this.state = {
+            predictionConfidenceThreshold: 0.9,
+            model: '',
             name: '',
             title: '',
             content: '',
             message: '',
+            toxic: false,
+            toxicityType: ''
         }
     }
 
     componentDidMount() {
         this.props.params.setLoading(false);
+        if (!this.state.model) {
+            this.loadModel().then(() => {
+                console.log("Model Loaded");
+            });
+        }
     }
+
+    loadModel = async () => {
+        this.setState({
+            model: await toxicity.load(this.state.predictionConfidenceThreshold)
+        })
+        // this.classify(['hi there', 'you suck']).then(obj => {
+        //     console.log(obj[0]);
+        // })
+    }
+
+    classify = async (inputs) => {
+        var { model } = this.state;
+
+        const results = await model.classify(inputs);
+        return inputs.map((d, i) => {
+            const obj = { 'text': d };
+            results.forEach((classification) => {
+                obj[classification.label] = classification.results[i].match;
+            });
+            return obj;
+        });
+    };
 
     onInputBoxChanged = (e) => {
         this.setState({
@@ -27,7 +58,7 @@ class CreateBlog extends Component {
         })
     }
 
-    preCheck = () => {
+    preCheck = async () => {
         const { name, title, content } = this.state;
 
         if (!name) this.setState({ message: "Name can't be empty" });
@@ -35,29 +66,53 @@ class CreateBlog extends Component {
         else if (!content) this.setState({ message: "Please enter some content" });
 
         if (!name || !title || !content) return false;
-        return true;
+
+        //Also check toxicity
+        this.setState({ message: "Checking toxicity..." })
+
+        var shouldFetch = await this.classify([name, title, content]).then(obj => {
+
+
+
+            if (obj[0].toxicity) this.setState({ message: "BlogPost Name contains toxicity" })
+            else if (obj[1].toxicity) this.setState({ message: "BlogPost Title contains toxicity" })
+            else if (obj[2].toxicity) this.setState({ message: "BlogPost Content contains toxicity" })
+
+            if (obj[0].toxicity || obj[1].toxicity || obj[2].toxicity) {
+                return false;
+            } else {
+                this.setState({ message: "Not Toxic. Now saving blog post..." })
+                return true;
+            }
+        })
+        console.log('isToxic' + !shouldFetch)
+        return shouldFetch;
 
     }
 
     onPost = () => {
         const { name, title, content } = this.state;
+        var shouldFetch = false;
+        this.preCheck().then(fetch => {
+            shouldFetch = fetch;
+            if (!shouldFetch) return;
+            console.log("gonna fetch");
+            axios.defaults.withCredentials = true;
 
-        var shouldFetch = this.preCheck();
-        if (!shouldFetch) return;
+            axios.post('http://localhost:8080/api/blogPost/create'
+                , {
+                    name: name,
+                    title: title,
+                    content: content
+                }).then(res => {
 
-        axios.defaults.withCredentials = true;
-
-        axios.post('http://localhost:8080/api/blogPost/create'
-            , {
-                name: name,
-                title: title,
-                content: content
-            }).then(res => {
-
-                this.setState({ message: res.data.message });
+                    this.setState({ message: res.data.message });
 
 
-            });
+                });
+        });
+
+
 
     }
 
@@ -91,13 +146,12 @@ class CreateBlog extends Component {
                             <div className="form-group row">
                                 <label className="col-sm-2 col-form-label">Content</label>
                                 <div className="col-sm-10">
-                                    <textarea class="form-control" name='content' onChange={this.onInputBoxChanged} rows="5"></textarea>
+                                    <textarea className="form-control" name='content' onChange={this.onInputBoxChanged} rows="5"></textarea>
                                 </div>
                             </div>
 
                             <button type="button" onClick={this.onPost} className="btn btn-warning">Post</button>
-
-                            <h6 className='text-center text-info'>{this.state.message}</h6>
+                            <h6 className='text-center text-info p-2'>{this.state.message}</h6>
                         </form>
 
                     </div>
