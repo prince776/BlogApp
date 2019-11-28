@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './CreateBlog.css'
 import Navbar from './../Navbar.js'
 import axios from 'axios';
+import * as toxicity from '@tensorflow-models/toxicity';
 
 class CreateBlog extends Component {
 

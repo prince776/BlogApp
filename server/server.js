@@ -29,7 +29,7 @@ app.use(cors({
     'origin': ['http://localhost:3000', 'http://192.168.0.86:3000'],
 }))
 app.use(cookieParser());
-
+//TODO: use env file
 //routes
 require('./routes/api/user.js')(app);
 require('./routes/api/userProfile.js')(app);

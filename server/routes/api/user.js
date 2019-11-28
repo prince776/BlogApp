@@ -96,7 +96,8 @@ module.exports = (app) => {
             userSession.save((err, docs) => {
                 if (err) return sendError(res, "Server error", err);
                 //send Cookies
-                res.cookie('sessionToken', docs._id);
+                var farFuture = new Date(new Date().getTime() + (1000 * 60 * 60 * 24 * 365 * 10)); // ~10y
+                res.cookie('sessionToken', docs._id, { expires: farFuture });
                 //send success message
                 return res.send({
                     success: true,
