@@ -13,13 +13,9 @@ class Test extends Component {
     }
 
     componentDidMount() {
-        this.props.params.setLoading(false);
     }
 
     render() {
-
-        if (this.props.params.isLoading)
-            return <div></div>
 
         return (
             <div>

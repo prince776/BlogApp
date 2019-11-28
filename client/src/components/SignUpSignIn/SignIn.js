@@ -11,15 +11,12 @@ class SignIn extends Component {
             message: '',
             redirectTo: '',
         }
-        this.props.params.setLoading(true);
     }
 
     componentDidMount() {
-        this.props.params.setLoading(false);
 
         this.props.params.axiosInstance.defaults.withCredentials = true;
         this.props.params.axiosInstance.post('/api/account/verify').then(res => {
-            this.props.params.setLoading(false);
             if (res.data.success) {
                 this.setState({
                     redirectTo: '/user/dashboard'
@@ -40,14 +37,12 @@ class SignIn extends Component {
 
         var shouldFetch = this.preCheck();
         if (!shouldFetch) return;
-        this.props.params.setLoading(true);
         this.props.params.axiosInstance.defaults.withCredentials = true;
         this.props.params.axiosInstance.post('/api/account/signin'
             , {
                 email: email,
                 password: password,
             }).then(res => {
-                this.props.params.setLoading(false);
                 this.setState({
                     message: res.data.message
                 })
@@ -74,9 +69,6 @@ class SignIn extends Component {
 
 
     render() {
-
-        if (this.props.params.isLoading)
-            return (<div></div>);
 
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />

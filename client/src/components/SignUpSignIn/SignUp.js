@@ -11,12 +11,10 @@ class SignUp extends Component {
             password: '',
             message: '',
         }
-        this.props.params.setLoading(true);
     }
 
 
     componentDidMount() {
-        this.props.params.setLoading(false);
     }
 
     onInputBoxChange = (e) => {
@@ -33,7 +31,6 @@ class SignUp extends Component {
         var shouldFetch = this.preCheck();
         if (!shouldFetch) return;
 
-        this.props.params.setLoading(true);
 
         this.props.params.axiosInstance.post('/api/account/signup'
             , {
@@ -41,7 +38,6 @@ class SignUp extends Component {
                 email: email,
                 password: password
             }).then(res => {
-                this.props.params.setLoading(false);
                 this.setState({
                     message: res.data.message,
                 })
@@ -64,9 +60,6 @@ class SignUp extends Component {
     }
 
     render() {
-
-        if (this.props.params.isLoading)
-            return (<div></div>)
 
         return (
             <div className='text-center text-black p-5'>

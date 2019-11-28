@@ -23,7 +23,6 @@ class Profile extends Component {
         this.props.params.axiosInstance.defaults.withCredentials = true;
 
         this.props.params.axiosInstance.post('/api/account/profile').then(res => {
-            this.props.params.setLoading(false);
             this.setState({
                 username: res.data.username,
                 email: res.data.email,
@@ -73,8 +72,6 @@ class Profile extends Component {
 
     render() {
 
-        if (this.props.params.isLoading)
-            return <div></div>
 
         var sendVerificationCodeButton;
         var verificationCodeInputBox;

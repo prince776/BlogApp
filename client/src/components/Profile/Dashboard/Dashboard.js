@@ -20,7 +20,6 @@ class Dashboard extends Component {
     }
 
     componentDidMount() {
-        this.props.params.setLoading(false);
 
         this.props.params.axiosInstance.defaults.withCredentials = true;
         this.props.params.axiosInstance.post('/api/blogPost/getMyPosts').then(res => {

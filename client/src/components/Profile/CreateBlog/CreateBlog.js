@@ -21,7 +21,6 @@ class CreateBlog extends Component {
     }
 
     componentDidMount() {
-        this.props.params.setLoading(false);
         if (!this.state.model) {
             this.loadModel().then(() => {
                 console.log("Model Loaded");
@@ -117,8 +116,6 @@ class CreateBlog extends Component {
 
     render() {
 
-        if (this.props.params.isLoading)
-            return <div></div>
 
         return (
             <div>

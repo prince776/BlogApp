@@ -12,7 +12,7 @@ class App extends Component {
     const env = process.env.NODE_ENV; // current environment
     // console.log(process.env);
     this.state = {
-      isLoading: true,
+      // isLoading: true,
       axiosInstance: axios.create({
         baseURL:
           env === 'production'
@@ -27,18 +27,18 @@ class App extends Component {
 
   }
 
-  setLoading = (loading) => {
-    this.setState({
-      isLoading: loading
-    })
-  }
+  // setLoading = (loading) => {
+  //   this.setState({
+  //     isLoading: loading
+  //   })
+  // }
 
   render() {
     return (
       <div>
         <Header />
         {this.state.isLoading === true ? <Loading /> : <div></div>}
-        <Main setLoading={this.setLoading} isLoading={this.state.isLoading} axiosInstance={this.state.axiosInstance} />
+        <Main axiosInstance={this.state.axiosInstance} />
         <Footer />
       </div>
     );

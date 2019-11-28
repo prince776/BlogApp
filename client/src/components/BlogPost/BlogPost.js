@@ -22,11 +22,9 @@ class BlogPost extends Component {
     }
 
     componentDidMount() {
-        this.props.params.setLoading(false);
 
         this.props.params.axiosInstance.defaults.withCredentials = true;
         this.props.params.axiosInstance.post('/api/account/verify').then(res => {
-            this.props.params.setLoading(false);
             if (res.data.success) {
                 this.setState({
                     isSignedIn: true
@@ -39,7 +37,6 @@ class BlogPost extends Component {
                 username: this.props.match.params.username,
                 blogPostName: this.props.match.params.blogPostName
             }).then(res => {
-                this.props.params.setLoading(false);
 
                 if (res.data.success) {
                     this.setState({
@@ -72,9 +69,6 @@ class BlogPost extends Component {
     }
 
     render() {
-
-        if (this.props.params.isLoading)
-            return <div></div>
 
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
