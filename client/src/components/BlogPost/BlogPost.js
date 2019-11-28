@@ -77,7 +77,7 @@ class BlogPost extends Component {
         var signInButon;
 
         if (this.state.isSignedIn) {
-            sidebar = <Navbar activeLink='' />
+            sidebar = <Navbar activeLink='' axiosInstance={this.props.params.axiosInstance} />
             signInButon = undefined
         } else {
             sidebar = undefined;
