@@ -149,7 +149,8 @@ class CreateBlog extends Component {
                                 </div>
                             </div>
 
-                            <button type="button" onClick={this.onPost} className="btn btn-warning">Post</button>
+                            {this.state.model ? <button type="button" onClick={this.onPost} className="btn btn-warning">Post</button> : <button type="button" className="btn btn-warning" disabled>Model Loading</button>}
+
                             <h6 className='text-center text-info p-2'>{this.state.message}</h6>
                         </form>
 

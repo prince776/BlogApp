@@ -16,6 +16,7 @@ module.exports = (app) => {
     app.post('/api/blogPost/create', (req, res) => {
 
         var sessionToken = req.cookies.sessionToken;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
         var { name, title, content } = req.body;
 
         if (!name) return sendError(res, "Empty Name");
@@ -29,7 +30,8 @@ module.exports = (app) => {
         //get what user is signed in
         UserSession.find({
             _id: sessionToken,
-            isDeleted: false
+            isDeleted: false,
+            ipAddress: ipAddress
         }, (err, previousSessions) => {
             if (err) return sendError(res, "Server Error", err);
             if (previousSessions.length < 1) return sendError(res, "Invalid Session");
@@ -170,6 +172,56 @@ module.exports = (app) => {
                         blogPostNames: blogPostNames,
                         blogPostTitles: blogPostTitles,
                         username: user.username
+                    })
+
+                })
+
+            })
+
+        })
+    });
+
+    app.post('/api/blogPost/delete', (req, res) => {
+        const sessionToken = req.cookies.sessionToken;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+        var { blogPostName } = req.body;
+
+        if (!blogPostName) return sendError(res, "Empty Blog Name");
+
+        UserSession.find({
+            _id: sessionToken,
+            isDeleted: false,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Expired");
+
+            User.find({
+                isDeleted: false,
+                _id: previousSessions[0].userID
+            }, (err, previousUsers) => {
+                if (err) return sendError(res, "Server Error", err);
+                if (previousUsers.length < 1) return sendError(res, "User doesn't exists");
+
+                var user = previousUsers[0];
+
+                BlogPost.find({
+                    isDeleted: false,
+                    author: user._id,
+                    name: blogPostName
+                }, (err, previousPosts) => {
+                    if (err) return sendError(res, "Server Error", err);
+                    if (previousPosts.length < 1) return sendError(res, "Post doesn't exists");
+
+                    var post = previousPosts[0];
+                    post.isDeleted = true;
+                    post.save((err, docs) => {
+                        if (err) return sendError(res, "Server Error", err);
+                        return res.send({
+                            success: true,
+                            message: 'Post deleted Successfully'
+                        })
                     })
 
                 })

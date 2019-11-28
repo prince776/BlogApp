@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     const env = process.env.NODE_ENV; // current environment
-    console.log(process.env);
+    // console.log(process.env);
     this.state = {
       isLoading: true,
       axiosInstance: axios.create({

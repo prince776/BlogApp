@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import './Dashboard.css'
 import Navbar from '../Navbar';
-import axios from 'axios';
 
 
 class Dashboard extends Component {
@@ -15,6 +14,7 @@ class Dashboard extends Component {
             blogPostNames: [],
             message: '',
             username: '',
+            deleting: false
         }
     }
 
@@ -39,6 +39,41 @@ class Dashboard extends Component {
 
     }
 
+    onDelete = (name) => {
+        if (this.state.deleting) return;
+
+        this.setState({ deleting: true });
+
+        const { blogPostTitles, blogPostNames } = this.state;
+
+        this.props.params.axiosInstance.withCredentials = true;
+
+        this.props.params.axiosInstance.post('/api/blogPost/delete'
+            , {
+                blogPostName: name
+            }).then(res => {
+                if (res.data.success) {
+                    this.setState({//remove from here as well if successful
+                        blogPostTitles: blogPostTitles.filter((title, index, arr) => {
+                            return title != blogPostTitles[blogPostNames.indexOf(name)];
+                        }),
+                        blogPostNames: blogPostNames.filter((blogPostName, index, arr) => {
+                            return blogPostName != name;
+                        }),
+                        deleting: false,
+                    })
+                } else {
+                    this.setState({ message: res.data.message, deleting: false })
+                }
+
+            })
+
+    }
+
+    onEdit = () => {
+
+    }
+
 
     render() {
 
@@ -52,7 +87,10 @@ class Dashboard extends Component {
 
                         <h3 className='text-secondary'>Welcome to Blogger</h3><br />
                         <Link to='/user/createBlog'><button className='btn btn-info'>Create Blog</button></Link>
+                        <h6 className='text-center text-primary p-2'>{this.state.message}</h6>
+
                         <hr />
+
                         <h4 className='text-secondary'>Your Blog Posts:</h4><br />
                         {/* TODO:SHOW previous blogs */}
 
@@ -61,6 +99,7 @@ class Dashboard extends Component {
                                 <tr>
                                     <th>Title</th>
                                     <th>BlogPost Name</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
 
@@ -78,12 +117,16 @@ class Dashboard extends Component {
                                                 {name}
                                             </Link>
                                         </td>
+                                        <td>
+                                            <button onClick={this.onDelete.bind(this, name)} className='btn btn-danger m-2'>Delete</button>
+                                            <button onClick={this.onEdit} className='btn btn-info'>Edit</button>
+                                        </td>
+
                                     </tr>
                                 )) : <tr><td></td></tr>}
 
                             </tbody>
                         </table>
-                        <h6 className='text-center text-info p-2'>{this.state.message}</h6>
                     </div>
                 </div>
 
