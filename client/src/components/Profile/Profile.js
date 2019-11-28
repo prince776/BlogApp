@@ -86,7 +86,7 @@ class Profile extends Component {
         }
 
         return (
-            <div>
+            <div className='container-fluid'>
                 <div className='row p-3'>
 
                     <Navbar activeLink='profile' axiosInstance={this.props.params.axiosInstance} />

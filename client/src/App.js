@@ -15,7 +15,7 @@ class App extends Component {
       // isLoading: true,
       axiosInstance: axios.create({
         baseURL:
-          //'http://localhost:8080',
+          // 'http://localhost:8080',
           env === 'production'
             ? 'https://fierce-retreat-71149.herokuapp.com' // production
             : 'http://localhost:8080', // development

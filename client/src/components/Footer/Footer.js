@@ -14,10 +14,12 @@ class Footer extends Component {
     render() {
 
         return (
-            <div className="footer p-3 ">
-
-                <p>© 2019 Copyright: Prince Gupta</p>
-
+            <div className='container-fluid'>
+                <div className='row'>
+                    <div className="footer p-3 text-center">
+                        <p>© 2019 Copyright: Prince Gupta</p>
+                    </div>
+                </div>
             </div>
         )
 

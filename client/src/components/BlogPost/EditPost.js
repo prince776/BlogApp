@@ -145,7 +145,7 @@ class EditPost extends Component {
         }
 
         return (
-            <div>
+            <div className='container-fluid'>
                 <div className='row p-3'>
                     <Navbar activeLink='' axiosInstance={this.props.params.axiosInstance} />
                     <div className='col text-center p-5 text-secondary'>

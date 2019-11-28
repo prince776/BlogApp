@@ -76,7 +76,7 @@ class SignIn extends Component {
         }
 
         return (
-            <div className='p-5'>
+            <div className='container-fluid p-5'>
                 <div className='text-center text-black '>
 
                     <div className='m-t-3'>

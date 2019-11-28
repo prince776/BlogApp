@@ -62,7 +62,7 @@ class SignUp extends Component {
     render() {
 
         return (
-            <div className='text-center text-black p-5'>
+            <div className='container-fluid text-center text-black p-5'>
 
                 <div >
                     <h1>Sign Up</h1>

@@ -89,7 +89,7 @@ class BlogPost extends Component {
         }
 
         return (
-            <div>
+            <div className='container-fluid'>
                 <div className='row p-3'>
                     {sidebar}
                     <div className='col text-center p-5 text-secondary'>
