@@ -99,7 +99,7 @@ class Dashboard extends Component {
                                 <tr>
                                     <th>Title</th>
                                     <th>BlogPost Name</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
 
