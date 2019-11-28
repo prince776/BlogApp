@@ -1,38 +1,33 @@
-var CACHE_NAME = 'pwa-blog-app';
+var CACHE_NAME = 'blog-app-cache-v1';
 var urlsToCache = [
     '/',
+    //   '/styles/styles.css',
+    //   '/script/webpack-bundle.js'
 ];
 
-// Install a service worker
-self.addEventListener('install', event => {
-    // Perform install steps
+self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(function (cache) {
-                console.log('Opened cache');
+                // Open a cache and cache our files
                 return cache.addAll(urlsToCache);
             })
     );
 });
 
-// Cache and return requests
-self.addEventListener('fetch', event => {
+
+self.addEventListener('fetch', function (event) {
+    console.log('fetch' + event.request.url);
     event.respondWith(
-        caches.match(event.request)
-            .then(function (response) {
-                // Cache hit - return response
-                if (response) {
-                    return response;
-                }
-                return fetch(event.request);
-            }
-            )
+        caches.match(event.request).then(function (response) {
+            return response || fetch(event.request);
+        })
     );
 });
 
 // Update a service worker
 self.addEventListener('activate', event => {
-    var cacheWhitelist = ['pwa-blog-app'];
+    var cacheWhitelist = [CACHE_NAME];
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(

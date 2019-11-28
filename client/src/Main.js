@@ -24,7 +24,6 @@ class Main extends Component {
 
         return (
             <Switch>
-                <Route exact path="/" render={() => <Home params={this.props} />} />
                 <Route exact path="/signup" render={() => <SignUp params={this.props} />} />
                 <Route exact path="/signin" render={() => <SignIn params={this.props} />} />
                 <Route exact path="/user/dashboard" render={() => <Dashboard params={this.props} />} />
@@ -32,6 +31,10 @@ class Main extends Component {
                 <Route exact path="/user/createBlog" render={() => <CreateBlog params={this.props} />} />
                 <Route exact path="/blogPosts/:username/:blogPostName" render={() => <BlogPost params={this.props} />} />
                 <Route exact path="/blogPosts/:username/:blogPostName/edit" render={() => <EditPost params={this.props} />} />
+
+
+
+                <Route path="/" render={() => <Home params={this.props} />} />
             </Switch>
         );
 

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './App.css';
 import Main from './Main.js'
-// import SignUp from './components/SignUpSignIn/SignUp.js'
 import Header from './components/Header/Header.js'
 import Footer from './components/Footer/Footer.js'
 import axios from 'axios'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
   constructor(props) {
@@ -15,12 +15,12 @@ class App extends Component {
       // isLoading: true,
       axiosInstance: axios.create({
         baseURL:
+          //'http://localhost:8080',
           env === 'production'
             ? 'https://fierce-retreat-71149.herokuapp.com' // production
             : 'http://localhost:8080', // development
       })
     }
-
   }
 
   componentDidMount() {

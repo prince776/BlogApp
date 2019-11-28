@@ -27,7 +27,7 @@ app.use(cors({
     'allowedHeaders': ['sessionId', 'Content-Type'],
     'exposedHeaders': ['sessionId'],
     'credentials': true,
-    'origin': ['http://localhost:3000', 'http://192.168.0.86:3000'],
+    'origin': ['http://localhost:3000', 'http://192.168.0.86:3000', 'http://localhost:5000', 'http://192.168.0.86:5000'],
 }))
 app.use(cookieParser());
 //TODO: use env file
@@ -40,11 +40,15 @@ require('./routes/api/blogPost.js')(app);
 if (process.env.NODE_ENV === 'production') {
     //set static folder
     app.use(express.static('client/build'));
-
+    app.get("/service-worker.js", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "public", "service-worker.js"));
+    });
     app.get('*', (req, res) => {
+        if (!req.secure) {
+            res.redirect("https://" + req.headers.host + req.url);
+        }
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
     })
-
 }
 
 app.listen(PORT, () => {

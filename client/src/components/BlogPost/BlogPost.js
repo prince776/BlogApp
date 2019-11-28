@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Redirect, withRouter } from 'react-router-dom'
 import './BlogPost.css'
 import Navbar from './../Profile/Navbar.js'
-import { unbindTextureUnit } from '@tensorflow/tfjs-core/dist/backends/webgl/webgl_util';
 
 class BlogPost extends Component {
 
