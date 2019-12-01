@@ -21,22 +21,6 @@ class Dashboard extends Component {
 
     componentDidMount() {
 
-        // this.props.params.axiosInstance.defaults.withCredentials = true;
-        // this.props.params.axiosInstance.post('/api/blogPost/getMyPosts').then(res => {
-
-        //     if (!res.data.success) {
-        //         this.setState({
-        //             message: res.data.message
-        //         });
-        //     }
-        //     this.setState({
-        //         blogPostNames: res.data.blogPostNames,
-        //         blogPostTitles: res.data.blogPostTitles,
-        //         username: res.data.username
-        //     })
-
-        // })
-
         this.props.params.postReq("Dashboard", '/api/blogPost/getMyPosts', true).then(res => {
 
             if (!res.data.success) {
@@ -65,6 +49,9 @@ class Dashboard extends Component {
                 }
             }
         })
+
+        //also load profile data
+        this.props.params.postReq("Profile", '/api/account/profile', true);
 
 
 
