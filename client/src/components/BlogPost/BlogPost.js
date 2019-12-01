@@ -81,12 +81,20 @@ class BlogPost extends Component {
     }
 
     onSignIn = () => {
+        if (!navigator.onLine) {
+            this.setState({ message: "You need to be online to signup" });
+            return;
+        }
         this.setState({
             redirectTo: '/signin'
         })
     }
 
     onEdit = () => {
+        if (!navigator.onLine) {
+            this.setState({ message: "You need to be online to edit" });
+            return;
+        }
         this.setState({
             redirectTo: `/blogPosts/${this.state.username}/${this.state.blogPostName}/edit`
         })

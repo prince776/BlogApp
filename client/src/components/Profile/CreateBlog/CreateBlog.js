@@ -21,20 +21,23 @@ class CreateBlog extends Component {
     }
 
     componentDidMount() {
-        if (!this.state.model) {
-            this.loadModel().then(() => {
-                console.log("Model Loaded");
-            });
+
+        if (!navigator.onLine) {
+            this.setState({
+                message: "You need to be online to create a post or load AI"
+            })
+            return;
         }
+
+        this.loadModel().then(model => {
+            console.log("Model Loaded")
+        });
     }
 
     loadModel = async () => {
         this.setState({
             model: await toxicity.load(this.state.predictionConfidenceThreshold)
         })
-        // this.classify(['hi there', 'you suck']).then(obj => {
-        //     console.log(obj[0]);
-        // })
     }
 
     classify = async (inputs) => {
@@ -147,7 +150,7 @@ class CreateBlog extends Component {
                                 </div>
                             </div>
 
-                            {this.state.model ? <button type="button" onClick={this.onPost} className="btn btn-warning">Post</button> : <button type="button" className="btn btn-warning" disabled>Model Loading</button>}
+                            {this.state.model ? <button type="button" onClick={this.onPost} className="btn btn-warning">Post</button> : <button type="button" className="btn btn-warning" disabled>Loading AI</button>}
 
                             <h6 className='text-center text-info p-2'>{this.state.message}</h6>
                         </form>

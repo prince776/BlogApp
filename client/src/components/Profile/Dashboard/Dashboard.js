@@ -50,7 +50,23 @@ class Dashboard extends Component {
                 username: res.data.username
             })
 
+            //save all fetch data for offline use.
+            var blogPostNames = res.data.blogPostNames;
+            if (blogPostNames) {
+                for (var i = 0; i < blogPostNames.length; i++) {
+                    var blogPostName = blogPostNames[i];
+                    this.props.params.postReq("BlogPost", '/api/blogPost/getBlogPostData', false
+                        , {
+                            username: this.state.username,
+                            blogPostName: blogPostName
+                        }).then(res => {
+                            // console.log(`FETCHED: ${blogPostName}`);
+                        })
+                }
+            }
         })
+
+
 
     }
 
