@@ -31,6 +31,10 @@ class SignUp extends Component {
         var shouldFetch = this.preCheck();
         if (!shouldFetch) return;
 
+        if (!navigator.onLine) {
+            this.setState({ message: "You need to be online to signup" });
+            return;
+        }
 
         this.props.params.axiosInstance.post('/api/account/signup'
             , {

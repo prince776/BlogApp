@@ -8,7 +8,8 @@ class Navbar extends Component {
         super(props);
 
         this.state = {
-            redirectTo: ''
+            redirectTo: '',
+            message: '',
         }
     }
 
@@ -16,6 +17,11 @@ class Navbar extends Component {
     }
 
     onSignOut = () => {
+
+        if (!navigator.onLine) {
+            this.setState({ message: 'You need to be online' })
+            return;
+        }
 
         this.props.axiosInstance.defaults.withCredentials = true;
         this.props.axiosInstance.post('/api/account/signout').then(res => {
@@ -59,6 +65,11 @@ class Navbar extends Component {
                             <button onClick={this.onSignOut} className="nav-link btn btn-light" >
                                 <h5>Sign Out</h5>
                             </button>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to='/user/createBlog'>
+                                {this.state.message}
+                            </Link>
                         </li>
                     </ul>
                 </nav>

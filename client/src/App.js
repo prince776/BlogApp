@@ -44,7 +44,7 @@ class App extends Component {
 
     if (!navigator.onLine) {
       if (apiCache[who + address]) {
-        console.log("OFFLINE.  cached api response");
+        console.log("OFFLINE. Serving cached api response");
         return apiCache[who + address];
       }
       else {
@@ -55,8 +55,9 @@ class App extends Component {
     console.log("ONLINE. Serving API response")
     var res = await axiosInstance.post(address);
     apiCache[who + address] = res;
-    console.log("API cache updated: ")
+    // apiCache.push({ key: who + address, value: res })
     localStorage.setItem('blogAppAPICache', JSON.stringify(apiCache));
+    console.log("API cache updated ")
     return res;
 
   }

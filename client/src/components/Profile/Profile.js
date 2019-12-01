@@ -45,9 +45,15 @@ class Profile extends Component {
             }
         });
 
+
     }
 
     onSendVerificationCode = () => {
+        if (!navigator.onLine) {
+            this.setState({ message: "You need to be online to verify your email" });
+            return;
+        }
+
         this.props.params.axiosInstance.post('/api/account/profile/sendVerificationCode'
             , {
                 email: this.state.email

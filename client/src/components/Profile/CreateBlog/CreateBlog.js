@@ -91,9 +91,16 @@ class CreateBlog extends Component {
     onPost = () => {
         const { name, title, content } = this.state;
         var shouldFetch = false;
+
         this.preCheck().then(fetch => {
             shouldFetch = fetch;
             if (!shouldFetch) return;
+
+            if (!navigator.onLine) {
+                this.setState({ message: "You need to be online to post it" });
+                return;
+            }
+
             console.log("gonna fetch");
             this.props.params.axiosInstance.defaults.withCredentials = true;
 
@@ -103,15 +110,9 @@ class CreateBlog extends Component {
                     title: title,
                     content: content
                 }).then(res => {
-
                     this.setState({ message: res.data.message });
-
-
                 });
         });
-
-
-
     }
 
     render() {
