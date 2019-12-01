@@ -17,10 +17,10 @@ class App extends Component {
     this.state = {
       axiosInstance: axios.create({
         baseURL:
-          // 'http://localhost:8080',
-          env === 'production'
-            ? 'https://fierce-retreat-71149.herokuapp.com' // production
-            : 'http://localhost:8080', // development
+          'http://localhost:8080',
+        // env === 'production'
+        //   ? 'https://fierce-retreat-71149.herokuapp.com' // production
+        //   : 'http://localhost:8080', // development
       }),
       apiCache: {},
       // isLoading: true,
@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (!localStorage.getItem('blogAppAPICache')) localStorage.setItem('blogAppAPICache', { "__test__": "test" });
+    if (!localStorage.getItem('blogAppAPICache')) localStorage.setItem('blogAppAPICache', JSON.stringify({ "__test__": "test" }));
     var cache = JSON.parse(localStorage.getItem('blogAppAPICache'));
     this.setState({
       apiCache: cache
