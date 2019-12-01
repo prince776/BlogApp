@@ -53,6 +53,7 @@ class Dashboard extends Component {
                 blogPostName: name
             }).then(res => {
                 if (res.data.success) {
+                    console.log(this.props.params.axiosInstance);
                     this.setState({//remove from here as well if successful
                         blogPostTitles: blogPostTitles.filter((title, index, arr) => {
                             return title != blogPostTitles[blogPostNames.indexOf(name)];

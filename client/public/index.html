@@ -39,14 +39,12 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('worker.js')
-        .then(function (registration) {
-          console.log('Hooray. Registration successful, scope is:', registration.scope);
-        }).catch(function (err) {
-          console.log('Whoops. Service worker registration failed, error:', error);
-        });
-    } else {
-      console.log('Service Worker is not supported by browser.');
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('worker.js')
+          .then(reg => console.log('Service Worker: Registered (Pages)'))
+          .catch(err => console.log(`Service Worker: Error: ${err}`));
+      });
     }
   </script>
 </body>

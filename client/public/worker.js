@@ -1,42 +1,43 @@
-var CACHE_NAME = 'blog-app-cache-v1';
-var urlsToCache = [
-    '/',
-    //   '/styles/styles.css',
-    //   '/script/webpack-bundle.js'
-];
+const cacheName = 'blog-app-v1';
 
-self.addEventListener('install', function (event) {
-    event.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(function (cache) {
-                // Open a cache and cache our files
-                return cache.addAll(urlsToCache);
-            })
-    );
+// Call Install Event
+self.addEventListener('install', e => {
+    console.log('Service Worker: Installed');
 });
 
-
-self.addEventListener('fetch', function (event) {
-    console.log('fetch' + event.request.url);
-    event.respondWith(
-        caches.match(event.request).then(function (response) {
-            return response || fetch(event.request);
-        })
-    );
-});
-
-// Update a service worker
-self.addEventListener('activate', event => {
-    var cacheWhitelist = [CACHE_NAME];
-    event.waitUntil(
+// Call Activate Event
+self.addEventListener('activate', e => {
+    console.log('Service Worker: Activated');
+    // Remove unwanted caches
+    e.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
+                cacheNames.map(cache => {
+                    if (cache !== cacheName) {
+                        console.log('Service Worker: Clearing Old Cache');
+                        return caches.delete(cache);
                     }
                 })
             );
         })
+    );
+});
+
+// Call Fetch Event
+self.addEventListener('fetch', e => {
+    console.log('Service Worker: Fetching');
+    e.respondWith(
+        fetch(e.request)
+            .then(res => {
+                // Make copy/clone of response
+                const resClone = res.clone();
+                // Open cahce
+                caches.open(cacheName).then(cache => {
+                    // Add response to cache
+                    cache.put(e.request, resClone);
+                });
+                return res;
+            })
+            .catch(err => caches.match(e.request).then(res => res))
     );
 });

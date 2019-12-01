@@ -4,22 +4,25 @@ import Main from './Main.js'
 import Header from './components/Header/Header.js'
 import Footer from './components/Footer/Footer.js'
 import axios from 'axios'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends Component {
+
   constructor(props) {
     super(props);
+
     const env = process.env.NODE_ENV; // current environment
-    // console.log(process.env);
+
     this.state = {
-      // isLoading: true,
       axiosInstance: axios.create({
         baseURL:
-          // 'http://localhost:8080',
-          env === 'production'
-            ? 'https://fierce-retreat-71149.herokuapp.com' // production
-            : 'http://localhost:8080', // development
-      })
+          'http://localhost:8080',
+        // env === 'production'
+        //   ? 'https://fierce-retreat-71149.herokuapp.com' // production
+        //   : 'http://localhost:8080', // development
+      }),
+      // isLoading: true,
     }
   }
 

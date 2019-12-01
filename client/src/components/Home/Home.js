@@ -9,7 +9,7 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props);
+        // console.log(this.props);
         this.props.params.axiosInstance.defaults.withCredentials = true;
         this.props.params.axiosInstance.post('/api/account/verify').then(res => {
             if (res.data.success) {
