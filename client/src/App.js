@@ -17,10 +17,10 @@ class App extends Component {
     this.state = {
       axiosInstance: axios.create({
         baseURL:
-          // 'http://localhost:8080',
-          env === 'production'
-            ? 'https://fierce-retreat-71149.herokuapp.com' // production
-            : 'http://localhost:8080', // development
+          'http://localhost:8080',
+        // env === 'production'
+        //   ? 'https://fierce-retreat-71149.herokuapp.com' // production
+        //   : 'http://localhost:8080', // development
       }),
       apiCache: {},
       // isLoading: true,
