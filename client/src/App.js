@@ -17,16 +17,47 @@ class App extends Component {
     this.state = {
       axiosInstance: axios.create({
         baseURL:
-          // 'http://localhost:8080',
-          env === 'production'
-            ? 'https://fierce-retreat-71149.herokuapp.com' // production
-            : 'http://localhost:8080', // development
+          'http://localhost:8080',
+        // env === 'production'
+        //   ? 'https://fierce-retreat-71149.herokuapp.com' // production
+        //   : 'http://localhost:8080', // development
       }),
+      apiCache: {},
       // isLoading: true,
     }
   }
 
   componentDidMount() {
+    var ls = localStorage.getItem('blogAppAPICache')
+    var cache = JSON.parse(ls);
+    this.setState({
+      apiCache: cache
+    })
+  }
+
+  //Auto caches API responses
+  postReq = async (who, address, withCredentials) => {
+
+    var { axiosInstance, apiCache } = this.state;
+
+    axiosInstance.withCredentials = withCredentials;
+
+    if (!navigator.onLine) {
+      if (apiCache[who + address]) {
+        console.log("OFFLINE.  cached api response");
+        return apiCache[who + address];
+      }
+      else {
+        console.log("OFFLINE. API response not cached");
+        return null;
+      }
+    }
+    console.log("ONLINE. Serving API response")
+    var res = await axiosInstance.post(address);
+    apiCache[who + address] = res;
+    console.log("API cache updated: ")
+    localStorage.setItem('blogAppAPICache', JSON.stringify(apiCache));
+    return res;
 
   }
 
@@ -41,7 +72,7 @@ class App extends Component {
       <div>
         <Header />
         {this.state.isLoading === true ? <Loading /> : <div></div>}
-        <Main axiosInstance={this.state.axiosInstance} />
+        <Main axiosInstance={this.state.axiosInstance} postReq={this.postReq} />
         <Footer />
       </div>
     );

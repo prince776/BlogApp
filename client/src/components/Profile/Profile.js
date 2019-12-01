@@ -20,9 +20,21 @@ class Profile extends Component {
 
     componentDidMount() {
 
-        this.props.params.axiosInstance.defaults.withCredentials = true;
+        // this.props.params.axiosInstance.defaults.withCredentials = true;
 
-        this.props.params.axiosInstance.post('/api/account/profile').then(res => {
+        // this.props.params.axiosInstance.post('/api/account/profile').then(res => {
+        //     this.setState({
+        //         username: res.data.username,
+        //         email: res.data.email,
+        //         isVerified: res.data.isVerified
+        //     })
+        //     if (!res.data.success) {
+        //         this.setState({ failMessage: 'Failed to fetch data from server!' })
+        //     }
+        // });
+
+        this.props.params.postReq("Profile", '/api/account/profile', true).then(res => {
+            // console.log(res.data)
             this.setState({
                 username: res.data.username,
                 email: res.data.email,
