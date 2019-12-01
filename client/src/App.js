@@ -28,11 +28,19 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (!localStorage.getItem('blogAppAPICache')) localStorage.setItem('blogAppAPICache', '"{"test":"test"}"');
-    var cache = JSON.parse(localStorage.getItem('blogAppAPICache'));
-    this.setState({
-      apiCache: cache
-    })
+    if (localStorage.getItem('blogAppAPICache')) {
+
+      try {
+        JSON.parse(localStorage.getItem('blogAppAPICache'));
+      } catch (e) {
+        localStorage.clear();
+        return;
+      }
+
+      this.setState({
+        apiCache: JSON.parse(localStorage.getItem('blogAppAPICache'))
+      })
+    }
 
   }
 
