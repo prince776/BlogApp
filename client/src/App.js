@@ -29,10 +29,12 @@ class App extends Component {
 
   componentDidMount() {
     var ls = localStorage.getItem('blogAppAPICache')
-    var cache = JSON.parse(ls);
-    this.setState({
-      apiCache: cache
-    })
+    if (ls) {
+      var cache = JSON.parse(ls);
+      this.setState({
+        apiCache: cache
+      })
+    }
   }
 
   //Auto caches API responses
