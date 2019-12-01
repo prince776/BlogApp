@@ -22,16 +22,42 @@ class BlogPost extends Component {
 
     componentDidMount() {
 
-        this.props.params.axiosInstance.defaults.withCredentials = true;
-        this.props.params.axiosInstance.post('/api/account/verify').then(res => {
-            if (res.data.success) {
-                this.setState({
-                    isSignedIn: true
-                })
-            }
-        });
+        if (navigator.onLine) {
+            this.props.params.axiosInstance.defaults.withCredentials = true;
+            this.props.params.axiosInstance.post('/api/account/verify').then(res => {
+                if (res.data.success) {
+                    this.setState({
+                        isSignedIn: true
+                    })
+                }
+            });
+        } else {
+            this.setState({ isSignedIn: true });//for offline just show that user signed in
+        }
 
-        this.props.params.axiosInstance.post('/api/blogPost/getBlogPostData'
+        // this.props.params.axiosInstance.post('/api/blogPost/getBlogPostData'
+        //     , {
+        //         username: this.props.match.params.username,
+        //         blogPostName: this.props.match.params.blogPostName
+        //     }).then(res => {
+
+        //         if (res.data.success) {
+        //             this.setState({
+        //                 title: res.data.title,
+        //                 content: res.data.content,
+        //                 username: res.data.username,
+        //                 blogPostName: res.data.blogPostName,
+        //                 timestamp: res.data.timestamp
+        //             })
+        //         } else {
+        //             this.setState({
+        //                 message: res.data.message
+        //             })
+        //         }
+
+        //     })
+
+        this.props.params.postReq("BlogPost", '/api/blogPost/getBlogPostData', false
             , {
                 username: this.props.match.params.username,
                 blogPostName: this.props.match.params.blogPostName
@@ -52,7 +78,6 @@ class BlogPost extends Component {
                 }
 
             })
-
     }
 
     onSignIn = () => {

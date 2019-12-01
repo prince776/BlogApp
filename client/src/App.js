@@ -36,26 +36,40 @@ class App extends Component {
   }
 
   //Auto caches API responses
-  postReq = async (who, address, withCredentials) => {
+  postReq = async (who, address, withCredentials, body) => {
 
     var { axiosInstance, apiCache } = this.state;
 
     axiosInstance.withCredentials = withCredentials;
 
     if (!navigator.onLine) {
-      if (apiCache[who + address]) {
-        console.log("OFFLINE. Serving cached api response");
-        return apiCache[who + address];
+      if (!body) {
+        if (apiCache[who + address]) {
+          console.log("OFFLINE. Serving cached api response");
+          return apiCache[who + address];
+        }
+      } else {
+        if (apiCache[who + address + '@' + JSON.stringify(body)]) {
+          console.log("OFFLINE. Serving cached api response");
+          return apiCache[who + address + '@' + JSON.stringify(body)];
+        }
       }
-      else {
-        console.log("OFFLINE. API response not cached");
-        return null;
-      }
+
+      console.log("OFFLINE. API response not cached");
+      return null;
+
     }
     console.log("ONLINE. Serving API response")
-    var res = await axiosInstance.post(address);
-    apiCache[who + address] = res;
-    // apiCache.push({ key: who + address, value: res })
+    if (body) {
+      var res = await axiosInstance.post(address, body);
+    } else {
+      var res = await axiosInstance.post(address);
+    }
+    if (!body)
+      apiCache[who + address] = res;
+    else {
+      apiCache[who + address + '@' + JSON.stringify(body)] = res;
+    }
     localStorage.setItem('blogAppAPICache', JSON.stringify(apiCache));
     console.log("API cache updated ")
     return res;
