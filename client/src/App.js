@@ -28,7 +28,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    if (!localStorage.getItem('blogAppAPICache')) localStorage.setItem('blogAppAPICache', JSON.stringify({ "__test__": "test" }));
+    if (!localStorage.getItem('blogAppAPICache')) localStorage.setItem('blogAppAPICache', '"{"test":"test"}"');
     var cache = JSON.parse(localStorage.getItem('blogAppAPICache'));
     this.setState({
       apiCache: cache
