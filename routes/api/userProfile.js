@@ -49,7 +49,6 @@ module.exports = (app) => {
     app.post('/api/account/profile', (req, res) => {
         const sessionToken = req.cookies.sessionToken;
         const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
-
         UserSession.find({
             _id: sessionToken,
             isDeleted: false,

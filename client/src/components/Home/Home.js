@@ -10,6 +10,15 @@ class Home extends Component {
 
     componentDidMount() {
         // console.log(this.props);
+
+        //if offline just redirect to dashbaord and if will have offline data stored it will work
+        if (!navigator.onLine) {
+            this.setState({
+                redirectTo: '/user/dashboard'
+            })
+            return;
+        }
+
         this.props.params.axiosInstance.defaults.withCredentials = true;
         this.props.params.axiosInstance.post('/api/account/verify').then(res => {
             if (res.data.success) {

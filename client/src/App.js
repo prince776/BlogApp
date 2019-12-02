@@ -6,6 +6,7 @@ import Footer from './components/Footer/Footer.js'
 import axios from 'axios'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { throws } from 'assert';
 
 class App extends Component {
 
@@ -17,19 +18,20 @@ class App extends Component {
     this.state = {
       axiosInstance: axios.create({
         baseURL:
-          // 'http://localhost:8080',
-          env === 'production'
-            ? 'https://fierce-retreat-71149.herokuapp.com' // production
-            : 'http://localhost:8080', // development
+          'http://localhost:8080',
+        // env === 'production'
+        //   ? 'https://fierce-retreat-71149.herokuapp.com' // production
+        //   : 'http://localhost:8080', // development
       }),
       apiCache: {},
-      // isLoading: true,
+
+      user: {},
+
     }
   }
 
   componentDidMount() {
     if (localStorage.getItem('blogAppAPICache')) {
-
       try {
         JSON.parse(localStorage.getItem('blogAppAPICache'));
       } catch (e) {
@@ -42,6 +44,23 @@ class App extends Component {
       })
     }
 
+    this.getUser();
+
+  }
+
+  getUser = () => {
+    this.state.axiosInstance.withCredentials = true;
+    this.state.axiosInstance.post('/api/account/profile').then(res => {
+      var user = {
+        username: res.data.username,
+        email: res.data.email,
+        isVerified: res.data.isVerified
+      };
+      this.setState({ user: user });
+      if (!res.data.success) {
+        console.log("FAILED")
+      }
+    });
   }
 
   //Auto caches API responses
@@ -50,6 +69,10 @@ class App extends Component {
     var { axiosInstance, apiCache } = this.state;
 
     axiosInstance.withCredentials = withCredentials;
+
+    if (withCredentials) {//auto update user
+      this.getUser();
+    }
 
     if (!navigator.onLine) {
       if (!body) {
@@ -85,30 +108,15 @@ class App extends Component {
 
   }
 
-  // setLoading = (loading) => {
-  //   this.setState({
-  //     isLoading: loading
-  //   })
-  // }
-
   render() {
     return (
       <div>
-        <Header />
-        {this.state.isLoading === true ? <Loading /> : <div></div>}
+        <Header username={this.state.user.username} />
         <Main axiosInstance={this.state.axiosInstance} postReq={this.postReq} />
         <Footer />
       </div>
     );
   }
-}
-
-var Loading = (props) => {
-
-  return (
-    <h3 className='text-center p-3'>Please wait while loading</h3>
-  )
-
 }
 
 export default App;

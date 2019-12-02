@@ -32,6 +32,9 @@ class Navbar extends Component {
                 redirectTo: '/signin'
             })
         });
+
+
+
     }
 
     render() {

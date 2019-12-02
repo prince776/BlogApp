@@ -112,7 +112,6 @@ module.exports = (app) => {
 
         const sessionToken = req.cookies.sessionToken;
         const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
-
         UserSession.find({
             _id: sessionToken,
             isDeleted: false,
@@ -158,5 +157,40 @@ module.exports = (app) => {
 
     });
 
+    app.post('/api/account/whoami', (req, res) => {
+
+        const sessionToken = req.cookies.sessionToken;
+        const ipAddress = String(req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+        console.log(sessionToken)
+        UserSession.find({
+            isDeleted: false,
+            _id: sessionToken,
+            ipAddress: ipAddress
+        }, (err, previousSessions) => {
+            if (err) return sendError(res, "Server Error", err);
+            if (previousSessions.length < 1) return sendError(res, "Session Invalid");
+
+            var session = previousSessions[0];
+
+            User.find({
+                _id: session.userID,
+                isDeleted: false
+            }, (err, previousUsers) => {
+                if (err) return sendError(res, "Server Error", err);
+                if (previousUsers.length < 1) return sendError(res, "User not found");
+
+                var user = previousUsers[0];
+
+                return res.send({
+                    success: true,
+                    username: user.username,
+                    message: 'SUCCESS'
+                })
+
+            })
+
+        })
+
+    });
 
 }

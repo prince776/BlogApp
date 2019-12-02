@@ -41,7 +41,7 @@ class Profile extends Component {
                 isVerified: res.data.isVerified
             })
             if (!res.data.success) {
-                this.setState({ failMessage: 'Failed to fetch data from server!' })
+                this.setState({ failMessage: res.data.message })
             }
         });
 
