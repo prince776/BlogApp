@@ -49,6 +49,20 @@ class App extends Component {
   }
 
   getUser = () => {
+    if (!navigator.onLine) {
+      if (this.state.apiCache['Profile' + '/api/account/profile']) {
+        console.log("OFFLINE. Serving cached api response");
+        var res = this.state.apiCache['Profile' + '/api/account/profile'];
+        var user = {
+          username: res.data.username,
+          email: res.data.email,
+          isVerified: res.data.isVerified
+        };
+        this.setState({ user: user });
+      }
+      console.log("OFFLINE. API response not cached");
+      return;
+    }
     this.state.axiosInstance.withCredentials = true;
     this.state.axiosInstance.post('/api/account/profile').then(res => {
       var user = {
@@ -88,6 +102,7 @@ class App extends Component {
       }
 
       console.log("OFFLINE. API response not cached");
+      console.log("API cache updated ")
       return null;
 
     }
