@@ -16,9 +16,9 @@ class Footer extends Component {
         return (
             <div className='container-fluid'>
                 <div className='row'>
-                    <div className="footer p-3 text-center">
+                    <footer className="footer">
                         <p>© 2019 Copyright: Prince Gupta</p>
-                    </div>
+                    </footer>
                 </div>
             </div>
         )

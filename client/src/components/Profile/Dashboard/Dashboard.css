@@ -4,3 +4,7 @@ p .active {
 p .active:hover {
     background-color: lightgray;
 }
+
+.activePage {
+    z-index: 0;
+}

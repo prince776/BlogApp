@@ -46,6 +46,13 @@ class Dashboard extends Component {
                 this.setState({
                     pageNumbers: pNo
                 })
+
+                //auto set postsPerPage
+                // var postsPerPage = this.state.totalPosts / 10;//100 is max pages
+                // this.setState({
+                //     postsPerPage: postsPerPage
+                // })
+
             })
 
 
@@ -78,8 +85,13 @@ class Dashboard extends Component {
             var { currentPage, postsPerPage, blogPostNames, blogPostTitles } = this.state;
             if (blogPostNames) {
                 this.setState({
-                    currentPostNames: blogPostNames.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage),
-                    currentPostTitles: blogPostTitles.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
+                    currentPostNames: [],
+                    currentPostTitles: [],
+                }, () => {
+                    this.setState({
+                        currentPostNames: blogPostNames.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage),
+                        currentPostTitles: blogPostTitles.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
+                    })
                 })
             }
         })
@@ -116,7 +128,7 @@ class Dashboard extends Component {
                                 {this.state.pageNumbers.map(number => (
 
                                     number === this.state.currentPage ?
-                                        <li key={number} className='page-item active'>
+                                        <li key={number} className='page-item active activePage'>
                                             <a className='page-link'>
                                                 {number}
                                             </a>
