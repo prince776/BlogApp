@@ -38,17 +38,7 @@ class Posts extends Component {
                         deleting: false,
                     })
 
-                    this.props.setAState('blogPostTitles',
-                        blogPostTitles.filter((title, index, arr) => {
-                            return title != blogPostTitles[blogPostNames.indexOf(name)];
-                        })
-                    )
-
-                    this.props.setAState('blogPostNames',
-                        blogPostNames.filter((blogPostName, index, arr) => {
-                            return blogPostName != name;
-                        })
-                    )
+                    this.props.deleteData(name);
 
                 } else {
                     this.props.setMessage(res.data.message);

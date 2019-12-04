@@ -16,7 +16,8 @@ class Dashboard extends Component {
             username: '',
             redirectTo: '',
             //pagination things
-            postsPerPage: 3, //const
+            postsPerPage: 3,
+            minPostsPerPage: 3,  //const
             currentPage: 1,
             totalPosts: 0,
             currentPostTitles: [],
@@ -48,10 +49,11 @@ class Dashboard extends Component {
                 })
 
                 //auto set postsPerPage
-                // var postsPerPage = this.state.totalPosts / 10;//100 is max pages
-                // this.setState({
-                //     postsPerPage: postsPerPage
-                // })
+                var postsPerPage = Math.ceil(this.state.totalPosts / 10);//divided total pages' nearest
+                if (postsPerPage < this.state.minPostsPerPage) postsPerPage = this.state.minPostsPerPage;
+                this.setState({
+                    postsPerPage: postsPerPage
+                })
 
             })
 
@@ -97,6 +99,23 @@ class Dashboard extends Component {
         })
     }
 
+    deleteData = (name) => {
+
+        var { blogPostNames, blogPostTitles, currentPostTitles, currentPostNames } = this.state;
+
+        this.setState({
+            blogPostTitles: blogPostTitles.filter((title, index, arr) => {
+                return title != blogPostTitles[blogPostNames.indexOf(name)];
+            }),
+            blogPostNames: blogPostNames.filter((blogPostName, index, arr) => {
+                return blogPostName != name;
+            }),
+        }, () => {
+            this.updatePaginationVars(this.state.currentPage);
+        })
+
+    }
+
     render() {
 
         const { username } = this.state;
@@ -120,7 +139,7 @@ class Dashboard extends Component {
                         <h4 className='text-secondary'>Your Blog Posts:</h4><br />
 
                         <Posts blogPostNames={this.state.currentPostNames} blogPostTitles={this.state.currentPostTitles} axiosInstance={this.props.params.axiosInstance}
-                            username={username} setAState={(name, value) => { this.setState({ [name]: value }) }}
+                            username={username} deleteData={this.deleteData} setAState={(name, value) => { this.setState({ [name]: value }) }}
                         />
 
                         <nav>
