@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import './Dashboard.css'
 import Navbar from '../Navbar';
-
+import Posts from './Posts.js'
 
 class Dashboard extends Component {
 
@@ -14,8 +14,13 @@ class Dashboard extends Component {
             blogPostNames: [],
             message: '',
             username: '',
-            deleting: false,
             redirectTo: '',
+            //pagination things
+            startIndex: 0,   //default
+            endIndex: 0,    //exclusive
+            postsPerPage: 5, //const
+            currentPostTitles: [],
+            currentPostNames: [],
         }
     }
 
@@ -32,7 +37,11 @@ class Dashboard extends Component {
                 blogPostNames: res.data.blogPostNames,
                 blogPostTitles: res.data.blogPostTitles,
                 username: res.data.username
+            }, () => {
+                this.updatePaginationVars();
             })
+
+
 
             //save all fetch data for offline use.
             var blogPostNames = res.data.blogPostNames;
@@ -53,63 +62,25 @@ class Dashboard extends Component {
         //also load profile data
         this.props.params.postReq("Profile", '/api/account/profile', true);
 
-
-
     }
 
-    onDelete = (name) => {
-        if (this.state.deleting) return;
-
-        this.setState({ deleting: true });
-
-        const { blogPostTitles, blogPostNames } = this.state;
-
-        if (!navigator.onLine) {
-            this.setState({ message: "You need to be online to delete it" });
-            return;
-        }
-
-
-        this.props.params.axiosInstance.withCredentials = true;
-
-        this.props.params.axiosInstance.post('/api/blogPost/delete'
-            , {
-                blogPostName: name
-            }).then(res => {
-                if (res.data.success) {
-                    console.log(this.props.params.axiosInstance);
-                    this.setState({//remove from here as well if successful
-                        blogPostTitles: blogPostTitles.filter((title, index, arr) => {
-                            return title != blogPostTitles[blogPostNames.indexOf(name)];
-                        }),
-                        blogPostNames: blogPostNames.filter((blogPostName, index, arr) => {
-                            return blogPostName != name;
-                        }),
-                        deleting: false,
-                    })
-                } else {
-                    this.setState({ message: res.data.message, deleting: false })
-                }
-
+    updatePaginationVars = () => {
+        var { blogPostNames, blogPostTitles, startIndex, postsPerPage } = this.state;
+        if (blogPostNames) {
+            this.setState({
+                endIndex: startIndex + postsPerPage,
+            }, () => {
+                this.setState({
+                    currentPostNames: blogPostNames.slice(startIndex, this.state.endIndex),
+                    currentPostTitles: blogPostTitles.slice(startIndex, this.state.endIndex)
+                })
             })
-
-    }
-
-    onEdit = (username, name) => {
-        if (!navigator.onLine) {
-            this.setState({ message: "You need to be online to Edit it." });
-            return;
         }
-
-        this.setState({
-            redirectTo: `/blogPosts/${username}/${name}/edit`
-        })
     }
-
 
     render() {
 
-        const { blogPostNames, blogPostTitles, username } = this.state;
+        const { username } = this.state;
 
         if (this.state.redirectTo) {
             return <Redirect to={this.state.redirectTo} />
@@ -128,41 +99,11 @@ class Dashboard extends Component {
                         <hr />
 
                         <h4 className='text-secondary'>Your Blog Posts:</h4><br />
-                        {/* TODO:SHOW previous blogs */}
 
-                        <table className='table table-hover'>
-                            <thead className='thead-dark'>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>BlogPost Name</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
+                        <Posts blogPostNames={this.state.currentPostNames} blogPostTitles={this.state.currentPostTitles} axiosInstance={this.props.params.axiosInstance}
+                            username={username} setAState={(name, value) => { this.setState({ [name]: value }) }}
+                        />
 
-                            <tbody>
-
-                                {blogPostNames ? blogPostNames.map(name => (
-                                    <tr key={name} >
-                                        <td>
-                                            <Link to={`/blogPosts/${username}/${name}`}>
-                                                {blogPostTitles[blogPostNames.indexOf(name)]}
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <Link to={`/blogPosts/${username}/${name}`}>
-                                                {name}
-                                            </Link>
-                                        </td>
-                                        <td>
-                                            <button onClick={this.onDelete.bind(this, name)} className='btn btn-danger m-2'>Delete</button>
-                                            <button onClick={this.onEdit.bind(this, username, name)} className='btn btn-info'>Edit</button>
-                                        </td>
-
-                                    </tr>
-                                )) : <tr><td></td></tr>}
-
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
