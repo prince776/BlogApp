@@ -1,0 +1,6 @@
+p .active {
+    background-color: lightgray;
+}
+p .active:hover {
+    background-color: lightgray;
+}

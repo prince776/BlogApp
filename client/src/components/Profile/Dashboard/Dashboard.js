@@ -16,11 +16,12 @@ class Dashboard extends Component {
             username: '',
             redirectTo: '',
             //pagination things
-            startIndex: 0,   //default
-            endIndex: 0,    //exclusive
-            postsPerPage: 5, //const
+            postsPerPage: 3, //const
+            currentPage: 1,
+            totalPosts: 0,
             currentPostTitles: [],
             currentPostNames: [],
+            pageNumbers: []
         }
     }
 
@@ -36,9 +37,15 @@ class Dashboard extends Component {
             this.setState({
                 blogPostNames: res.data.blogPostNames,
                 blogPostTitles: res.data.blogPostTitles,
-                username: res.data.username
+                username: res.data.username,
+                totalPosts: res.data.totalPosts
             }, () => {
-                this.updatePaginationVars();
+                this.updatePaginationVars(1);
+                var pNo = [];
+                for (let i = 1; i <= Math.ceil(this.state.totalPosts / this.state.postsPerPage); i++) pNo.push(i); //page numbers
+                this.setState({
+                    pageNumbers: pNo
+                })
             })
 
 
@@ -64,18 +71,18 @@ class Dashboard extends Component {
 
     }
 
-    updatePaginationVars = () => {
-        var { blogPostNames, blogPostTitles, startIndex, postsPerPage } = this.state;
-        if (blogPostNames) {
-            this.setState({
-                endIndex: startIndex + postsPerPage,
-            }, () => {
+    updatePaginationVars = (newPageNo) => {
+        this.setState({
+            currentPage: newPageNo
+        }, () => {
+            var { currentPage, postsPerPage, blogPostNames, blogPostTitles } = this.state;
+            if (blogPostNames) {
                 this.setState({
-                    currentPostNames: blogPostNames.slice(startIndex, this.state.endIndex),
-                    currentPostTitles: blogPostTitles.slice(startIndex, this.state.endIndex)
+                    currentPostNames: blogPostNames.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage),
+                    currentPostTitles: blogPostTitles.slice((currentPage - 1) * postsPerPage, currentPage * postsPerPage)
                 })
-            })
-        }
+            }
+        })
     }
 
     render() {
@@ -103,6 +110,26 @@ class Dashboard extends Component {
                         <Posts blogPostNames={this.state.currentPostNames} blogPostTitles={this.state.currentPostTitles} axiosInstance={this.props.params.axiosInstance}
                             username={username} setAState={(name, value) => { this.setState({ [name]: value }) }}
                         />
+
+                        <nav>
+                            <ul className='text-center pagination'>
+                                {this.state.pageNumbers.map(number => (
+
+                                    number === this.state.currentPage ?
+                                        <li key={number} className='page-item active'>
+                                            <a className='page-link'>
+                                                {number}
+                                            </a>
+                                        </li> :
+                                        <li key={number} className='page-item'>
+                                            <a onClick={this.updatePaginationVars.bind(this, number)} className='page-link'>
+                                                {number}
+                                            </a>
+                                        </li>
+
+                                ))}
+                            </ul>
+                        </nav>
 
                     </div>
                 </div>

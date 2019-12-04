@@ -163,6 +163,9 @@ module.exports = (app) => {
                         })
                     }
 
+                    var totalPosts = previousPosts.length;
+                    previousPosts = previousPosts.slice(0, 100);//MAX 100 Posts will be sent
+
                     previousPosts.forEach((post) => {
                         blogPostNames.push(post.name);
                         blogPostTitles.push(post.title);
@@ -171,7 +174,8 @@ module.exports = (app) => {
                     return res.send({
                         blogPostNames: blogPostNames,
                         blogPostTitles: blogPostTitles,
-                        username: user.username
+                        username: user.username,
+                        totalPosts: totalPosts
                     })
 
                 })
