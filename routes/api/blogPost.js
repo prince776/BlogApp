@@ -46,6 +46,9 @@ module.exports = (app) => {
                 if (previousUsers.length < 1) return sendError(res, "User doesn't exists");
 
                 var user = previousUsers[0];
+
+                if(!user.isVerified)
+                    return sendError(res, "Email is not verified!");
                 //Now we have the user
                 //check if the name is not already taken by this user
 
