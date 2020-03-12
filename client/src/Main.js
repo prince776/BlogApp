@@ -10,6 +10,7 @@ import Profile from './components/Profile/Profile.js'
 import CreateBlog from './components/Profile/CreateBlog/CreateBlog.js'
 import BlogPost from './components/BlogPost/BlogPost.js'
 import EditPost from './components/BlogPost/EditPost.js'
+// import BrowsePosts from './components/Browse/BrowsePosts.js'
 
 class Main extends Component {
 
@@ -20,8 +21,6 @@ class Main extends Component {
 
     render() {
 
-
-
         return (
             <Switch>
                 <Route exact path="/signup" render={() => <SignUp params={this.props} />} />
@@ -29,6 +28,10 @@ class Main extends Component {
                 <Route exact path="/user/dashboard" render={() => <Dashboard params={this.props} />} />
                 <Route exact path="/user/profile" render={() => <Profile params={this.props} />} />
                 <Route exact path="/user/createBlog" render={() => <CreateBlog params={this.props} />} />
+                {/* <Route exact path="/browsePosts" render={() => <BrowsePosts params={this.props} />} /> */}
+
+
+                {/* Variable routes */}
                 <Route exact path="/blogPosts/:username/:blogPostName" render={() => <BlogPost params={this.props} />} />
                 <Route exact path="/blogPosts/:username/:blogPostName/edit" render={() => <EditPost params={this.props} />} />
 

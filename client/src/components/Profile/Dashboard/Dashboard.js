@@ -3,6 +3,8 @@ import { Link, Redirect } from 'react-router-dom'
 import './Dashboard.css'
 import Navbar from '../Navbar';
 import Posts from './Posts.js'
+import ListView from '../../Utils/ListView';
+import ShowItems from '../../Utils/ShowItems';
 
 class Dashboard extends Component {
 
@@ -12,18 +14,20 @@ class Dashboard extends Component {
         this.state = {
             blogPostTitles: [],
             blogPostNames: [],
+            totalPosts: 0,
             message: '',
             username: '',
             redirectTo: '',
             //pagination things
-            postsPerPage: 3,
-            minPostsPerPage: 3,  //const
-            currentPage: 1,
-            totalPosts: 0,
-            currentPostTitles: [],
-            currentPostNames: [],
-            pageNumbers: [],
+            // postsPerPage: 3,
+            // minPostsPerPage: 3,  //const
+            // currentPage: 1,
+            // totalPosts: 0,
+            // currentPostTitles: [],
+            // currentPostNames: [],
+            // pageNumbers: [],
             toSearch: '',
+            listView: null,
         }
     }
 
@@ -42,23 +46,16 @@ class Dashboard extends Component {
                 username: res.data.username,
                 totalPosts: res.data.totalPosts
             }, () => {
-                this.updatePaginationVars(1);
-                var pNo = [];
-                for (let i = 1; i <= Math.ceil(this.state.totalPosts / this.state.postsPerPage); i++) pNo.push(i); //page numbers
-                this.setState({
-                    pageNumbers: pNo
-                })
 
-                //auto set postsPerPage
-                var postsPerPage = Math.ceil(this.state.totalPosts / 10);//divided total pages' nearest
-                if (postsPerPage < this.state.minPostsPerPage) postsPerPage = this.state.minPostsPerPage;
+                const { blogPostNames, blogPostTitles, totalPosts } = this.state;
+
                 this.setState({
-                    postsPerPage: postsPerPage
-                })
+                    listView: <ListView titles={blogPostTitles} names={blogPostNames}
+                        itemsPerPage={3} minItemsPerPage={3} totalItems={totalPosts}
+                        renderMethod={this.renderMethod} />
+                });
 
             })
-
-
 
             //save all fetch data for offline use.
             var blogPostNames = res.data.blogPostNames;
@@ -74,11 +71,17 @@ class Dashboard extends Component {
                         })
                 }
             }
+
         })
 
         //also load profile data
         this.props.params.postReq("Profile", '/api/account/profile', true);
 
+    }
+
+    renderMethod = (names, titles) => {
+        return <ShowItems headings={['Title', 'Name']} names={names} titles={titles}
+            username={this.state.username} routingBase={'blogPosts'} />
     }
 
     onSearch = (e) => {
@@ -173,19 +176,21 @@ class Dashboard extends Component {
 
                         <h4 className='text-secondary'>Your Blog Posts:</h4><br />
 
-                        {/* Search Box  */}
+                        {this.state.listView}
+
+                        {/* Search Box 
                         <div className="form-group row">
                             <label className="col-sm-2 col-form-label text-secondary">Search</label>
                             <div className="col-sm-10">
                                 <input type="text" onChange={this.onSearch} className="form-control" placeholder="Search" />
                             </div>
-                        </div>
+                        </div> */}
 
-                        <Posts blogPostNames={this.state.currentPostNames} blogPostTitles={this.state.currentPostTitles} axiosInstance={this.props.params.axiosInstance}
+                        {/* <Posts blogPostNames={this.state.currentPostNames} blogPostTitles={this.state.currentPostTitles} axiosInstance={this.props.params.axiosInstance}
                             username={username} deleteData={this.deleteData} setAState={(name, value) => { this.setState({ [name]: value }) }}
-                        />
+                        /> */}
 
-                        {!this.state.toSearch ?
+                        {/* {!this.state.toSearch ?
                             <nav>
                                 <ul className='text-center pagination'>
                                     {this.state.pageNumbers.map(number => (
@@ -207,7 +212,7 @@ class Dashboard extends Component {
                             </nav>
                             :
                             ""
-                        }
+                        } */}
 
                     </div>
                 </div>

@@ -54,6 +54,11 @@ class Navbar extends Component {
                             </Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link" to='/browsePosts'>
+                                {this.props.activeLink === 'browsePosts' ? <h5 className='text-info'>Browse Posts</h5> : <h5>Browse Posts</h5>}
+                            </Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link" to='/user/profile'>
                                 {this.props.activeLink === 'profile' ? <h5 className='text-info'>Profile</h5> : <h5>Profile</h5>}
                             </Link>
